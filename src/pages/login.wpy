@@ -3,13 +3,13 @@
     <form class="login__block" @submit="onSubmit">
       <view class="login__title">Sign in using your Github account to use wepy github app</view>
       <view class="form__content">
-        <view class="form__item {{ focusItem === 'username' ? 'focus' : '' }}">
+        <view class="form__item {{ userNameFocus ? 'focus' : '' }}">
           <label>Username</label>
-          <input @focus="focusPwd({{ 'username' }})" class="username" name="username" />
+          <input @blur="onBlur({{ 'username' }})" @focus="onFocus({{ 'username' }})" class="username" name="username" />
         </view>
-        <view class="form__item {{ focusItem === 'pwd' ? 'focus' : '' }}">
+        <view class="form__item {{ pwdFocus ? 'focus' : '' }}">
           <label>Password</label>
-          <input @focus="focusPwd({{ 'pwd' }})" class="password" name="pwd" password="{{true}}" />
+          <input @blur="onBlur({{ 'pwd' }})" @focus="onFocus({{ 'pwd' }})" class="password" name="pwd" password="{{true}}" />
         </view>
         <button class="submit__btn" form-type="submit">
           <image class="submit__img" src="../images/login.png" />
@@ -31,7 +31,8 @@ export default class Login extends wepy.page {
   }
 
   data = {
-    focusItem: ''
+    pwdFocus: false,
+    userNameFocus: false
   }
 
   methods = {
@@ -52,8 +53,26 @@ export default class Login extends wepy.page {
         wepy.switchTab({ url: './index' })
       }
     },
-    focusPwd(name) {
-      this.focusItem = name
+    onFocus(name) {
+      if (name === 'username') {
+        this.userNameFocus = true
+      } else {
+        this.pwdFocus = true
+      }
+    },
+    onBlur(name, e) {
+      const {
+        detail: {
+          value = ''
+        }
+      } = e
+      if (!value) {
+        if (name === 'username') {
+          this.userNameFocus = false
+        } else {
+          this.pwdFocus = false
+        }
+      }
     }
   }
 }
@@ -110,7 +129,7 @@ export default class Login extends wepy.page {
         .username,
         .password {
           border-bottom: 2rpx solid @block_bg_color;
-          color: @block_bg_color;
+          color: #000;
 
           &:focus-within {
             border-bottom-width: 4rpx;

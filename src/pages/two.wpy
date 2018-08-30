@@ -1,0 +1,19 @@
+<template>
+  <view>
+    sdssd
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Two extends wepy.page {
+    config = {
+        navigationBarTitleText: 'sdsd'
+    }
+}
+</script>
+
+<style lang='less'>
+
+</style>

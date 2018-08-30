@@ -1,0 +1,137 @@
+<template>
+  <view class="container">
+    <form class="login__block" @submit="onSubmit">
+      <view class="login__title">Sign in using your Github account to use wepy github app</view>
+      <view class="form__content">
+        <view class="form__item {{ focusItem === 'username' ? 'focus' : '' }}">
+          <label>Username</label>
+          <input @focus="focusPwd({{ 'username' }})" class="username" name="username" />
+        </view>
+        <view class="form__item {{ focusItem === 'pwd' ? 'focus' : '' }}">
+          <label>Password</label>
+          <input @focus="focusPwd({{ 'pwd' }})" class="password" name="pwd" password="{{true}}" />
+        </view>
+        <button class="submit__btn" form-type="submit">
+          <image class="submit__img" src="../images/login.png" />
+        </button>
+      </view>
+    </form>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import * as services from '../utils/services.js'
+
+export default class Login extends wepy.page {
+  config = {
+    navigationBarTitleText: '登录',
+    navigationBarBackgroundColor: '#1a237e',
+    navigationBarTextStyle: 'white'
+  }
+
+  data = {
+    focusItem: ''
+  }
+
+  methods = {
+    async onSubmit(e) {
+      const {
+        detail: {
+          value: {
+            username,
+            pwd
+          }
+        }
+      } = e
+
+      const result = await services.login(username, pwd)
+      if (result.statusCode === 200) {
+        const { data } = result
+        wx.setStorageSync('userInfo', data)
+        wepy.switchTab({ url: './index' })
+      }
+    },
+    focusPwd(name) {
+      this.focusItem = name
+    }
+  }
+}
+</script>
+
+<style lang='less'>
+  @bg_color: rgb(48, 62, 159);
+  @block_bg_color: rgb(42, 98, 255);
+
+  .container {
+    background-color: @bg_color;
+    width: 100%;
+    height: 100%;
+
+    .login__block {
+      width: 650rpx;
+      height: 906rpx;
+      margin: 150rpx auto 0;
+      color: #fff;
+      border-radius: 4rpx;
+      overflow: hidden;
+
+      .login__title {
+        padding: 70rpx 30rpx 50rpx;
+        text-align: center;
+        background: @block_bg_color;
+      }
+
+      .form__content {
+        background: #fff;
+        border-top: 1rpx solid transparent;
+        height: calc(~'100% - 224rpx');
+
+        .form__item {
+          margin: 120rpx 40rpx 0;
+          position: relative;
+
+          &.focus {
+            label {
+              transform: scale(.75) translateY(-58rpx) translateX(-16px);
+              transition: all .3s cubic-bezier(.4, 0, .2, 1);
+            }
+          }
+
+          label {
+            color: @block_bg_color;
+            font-size: 38rpx;
+            position: absolute;
+            bottom: 6rpx;
+            left: 0rpx;
+          }
+        }
+
+        .username,
+        .password {
+          border-bottom: 2rpx solid @block_bg_color;
+          color: @block_bg_color;
+
+          &:focus-within {
+            border-bottom-width: 4rpx;
+          }
+        }
+
+        .submit__btn {
+          background: @block_bg_color;
+          margin-top: 130rpx;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 570rpx;
+          padding: 10rpx 0;
+
+          .submit__img {
+            width: 80rpx;
+            height: 80rpx;
+          }
+        }
+      }
+    }
+  }
+</style>

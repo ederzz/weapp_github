@@ -149,3 +149,36 @@ export const request = async (url, options = {}) => {
     ...options
   })
 }
+
+/**
+ * 转化时间字符串
+ * @param {Number | String} time 时间
+ */
+export function formatMsgTime (time) {
+  const preTime = new Date(time).getTime()
+  const dateTime = new Date(time)
+  const now = new Date()
+  const nowTimes = now.getTime()
+
+  const year = dateTime.getFullYear()
+  const month = dateTime.getMonth() + 1
+  const day = dateTime.getDate()
+
+  const milliseconds = nowTimes - preTime
+
+  if (milliseconds <= 1000 * 60 * 1) {
+    return '刚刚'
+  }
+  else if (1000 * 60 * 1 < milliseconds && milliseconds <= 1000 * 60 * 60) {
+    return Math.round((milliseconds / (1000 * 60))) + ' minutes ago'
+  }
+  else if (1000 * 60 * 60 * 1 < milliseconds && milliseconds <= 1000 * 60 * 60 * 24) {
+    return Math.round(milliseconds / (1000 * 60 * 60)) + ' hours age'
+  }
+  else if (1000 * 60 * 60 * 24 < milliseconds && milliseconds <= 1000 * 60 * 60 * 24 * 15) {
+    return Math.round(milliseconds / (1000 * 60 * 60 * 24)) + ' days ago'
+  }
+  else if (milliseconds > 1000 * 60 * 60 * 24 * 15) {
+    return `${constants.monthMap[month - 1]} ${day}，${year}`
+  }
+}

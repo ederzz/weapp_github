@@ -21,11 +21,9 @@
     <swiper class="data__container" current="{{tabIndex}}" @change="onChange">
       <repeat for="{{ dataSource }}" key="index" index="dataIndex" item="data">
         <swiper-item class="swiper__item">
-          <view wx:if="{{ data.length }}" class="data__wrapper">
-            <repeat for="{{ data }}" key="index" index="index" item="item">
-              <view>11</view>
-            </repeat>
-          </view>
+          <scroll-view scroll-y wx:if="{{ data.length }}" class="data__wrapper">
+            <repository_detail :listData.sync="data"></repository_detail>
+          </scroll-view>
           <view class="empty__block" wx:if="{{ !data.length }}">
             <view style="margin: 0 0 20rpx;">No search results</view>
             <view>(T ^ T)</view>
@@ -39,10 +37,16 @@
 <script>
 import wepy from 'wepy'
 import * as services from '../utils/services.js'
+import { formatMsgTime } from '@/utils/helper'
+import RepositoryDetail from '@/components/search/repositoryDetail'
 
 export default class Search extends wepy.page {
   config = {
     navigationBarTitleText: '搜索'
+  }
+
+  components = {
+    repository_detail: RepositoryDetail
   }
 
   data = {
@@ -61,7 +65,7 @@ export default class Search extends wepy.page {
       []
     ],
     total: [
-      '(sdsdsd)',
+      '',
       '',
       '',
       ''
@@ -105,7 +109,6 @@ export default class Search extends wepy.page {
         }
       } = e
 
-      console.log(search)
       const result = await services.searchRegistry(search, 1)
       if (result.statusCode === 200) {
         const {
@@ -114,11 +117,23 @@ export default class Search extends wepy.page {
             items
           }
         } = result
-        this.dataSource[0].push(...items)
+        console.log(items.map(current => Object.assign(
+          {},
+          current,
+          {
+            updatedAt: formatMsgTime(current.updated_at)
+          }
+        )))
+        this.dataSource[0].push(...items.map(current => Object.assign(
+          {},
+          current,
+          {
+            updatedAt: formatMsgTime(current.updated_at)
+          }
+        )))
         this.total[0] = `(${totalCount})`
         this.$apply()
       }
-      console.log(result)
     }
   }
 }
@@ -225,6 +240,11 @@ export default class Search extends wepy.page {
 
     .data__container {
       flex-grow: 1;
+
+      .data__wrapper {
+        height: 100%;
+        overflow: auto;
+      }
 
       .empty__block {
         color: @main_color;

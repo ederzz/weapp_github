@@ -1,0 +1,91 @@
+<template>
+  <repeat for="{{ listData }}" key="index" index="index" item="item">
+    <view class="repository">
+      <view class="avatar__wrapper">
+        <image src="{{ item.owner.avatar_url }}" class="author__avatar" />
+      </view>
+      <view class="info">
+        <view class="name">{{ item.full_name }}</view>
+        <view class="desc">
+          <view>
+            <image src="../../images/star.png" class="desc__img" />
+            <view>{{ item.stargazers_count }}</view>
+          </view>
+          <view>
+            <image src="../../images/fork.png" class="desc__img" />
+            <view>{{ item.forks }}</view>
+          </view>
+          <view>
+            <image src="../../images/time.png" class="desc__img" />
+            <view>{{ item.updatedAt }}</view>
+          </view>
+          <view>
+            <image src="../../images/size.png" class="desc__img" />
+            <view>{{ item.size }}</view>
+          </view>
+          <view>{{ item.language }}</view>
+        </view>
+      </view>
+    </view>
+  </repeat>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class RepositroyDetail extends wepy.component {
+  props = {
+    listData: Array
+  }
+}
+</script>
+
+<style lang='less'>
+  .repository {
+    display: flex;
+
+    .avatar__wrapper {
+      display: flex;
+      align-items: center;
+
+      .author__avatar {
+        border-radius: 50%;
+        width: 100rpx;
+        height: 100rpx;
+        margin: auto 30rpx;
+      }
+    }
+
+    .info {
+      padding: 20rpx 0;
+
+      .name {
+        font-size: 32rpx;
+        font-weight: 500;
+        margin-bottom: 10rpx;
+      }
+
+      .desc {
+        font-size: 26rpx;
+        color: rgba(0, 0, 0, .7);
+        display: flex;
+        flex-wrap: wrap;
+
+        >view {
+          display: flex;
+          align-items: center;
+
+          >view {
+            white-space: nowrap;
+            padding: 0 15rpx;
+          }
+        }
+
+        .desc__img {
+          width: 24rpx;
+          height: 24rpx;
+        }
+      }
+    }
+  }
+</style>

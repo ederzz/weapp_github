@@ -1,0 +1,19 @@
+<template>
+  <view>
+    个人中心
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class PersonalCenter extends wepy.page {
+  config = {
+    navigationBarTitleText: '个人中心'
+  }
+}
+</script>
+
+<style lang='less'>
+
+</style>

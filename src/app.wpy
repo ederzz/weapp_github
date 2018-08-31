@@ -21,9 +21,11 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/search',
+      'pages/feeds',
       'pages/login',
       'pages/index',
-      'pages/two',
+      'pages/personalCenter'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -34,12 +36,12 @@ export default class extends wepy.app {
     tabBar: {
       list: [
         {
-          pagePath: 'pages/index',
-          text: '首页'
+          pagePath: 'pages/feeds',
+          text: 'Feeds'
         },
         {
-          pagePath: 'pages/two',
-          text: '另一页'
+          pagePath: 'pages/personalCenter',
+          text: '个人中心'
         }
       ]
 
@@ -59,6 +61,7 @@ export default class extends wepy.app {
   async onLaunch() {
     this.testAsync()
 
+    console.log(wx.getStorageSync('userInfo'), '个人信息')
     if (!wx.getStorageSync('userInfo')) {
       wepy.redirectTo({ url: 'pages/login' })
     }

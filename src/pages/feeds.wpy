@@ -1,0 +1,20 @@
+<template>
+  <view>
+    这里是feeds
+    <view class="show">feeeds</view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Feeds extends wepy.page {
+  config = {
+    navigationBarTitleText: 'Feeds'
+  }
+}
+</script>
+
+<style lang='less'>
+
+</style>

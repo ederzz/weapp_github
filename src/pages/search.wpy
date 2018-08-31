@@ -10,11 +10,13 @@
     </form>
     <view class="tabs__wrapper">
       <view class="white__block"></view>
-      <view class="tabs">
-        <repeat for="{{ tabs }}" key="index" index="index" item="item">
-          <view @tap="switchTab({{ index }})" class="tabs__item {{ tabIndex === index ? 'active' : '' }}">{{ item }}</view>
-        </repeat>
-      </view>
+      <scroll-view scroll-left="{{ scrollLeft }}" class="shadow__box" scroll-x>
+        <view class="tabs">
+          <repeat for="{{ tabs }}" key="index" index="index" item="item">
+            <view @tap="switchTab({{ index }})" class="tabs__item {{ tabIndex === index ? 'active' : '' }}">{{ item }}{{ total[index] }}</view>
+          </repeat>
+        </view>
+      </scroll-view>
     </view>
     <swiper class="data__container" current="{{tabIndex}}" @change="onChange">
       <repeat for="{{ dataSource }}" key="index" index="dataIndex" item="data">
@@ -36,6 +38,7 @@
 
 <script>
 import wepy from 'wepy'
+import * as services from '../utils/services.js'
 
 export default class Search extends wepy.page {
   config = {
@@ -56,7 +59,14 @@ export default class Search extends wepy.page {
       [],
       [],
       []
-    ]
+    ],
+    total: [
+      '(sdsdsd)',
+      '',
+      '',
+      ''
+    ],
+    scrollLeft: 0
   }
 
   methods = {
@@ -67,6 +77,7 @@ export default class Search extends wepy.page {
         }
       } = e
       this.tabIndex = current
+      this.scrollLeft = 20 * current
     },
     switchTab(index) {
       this.tabIndex = index
@@ -85,7 +96,7 @@ export default class Search extends wepy.page {
         this.inputFocus = false
       }
     },
-    onSeach(e) {
+    async onSeach(e) {
       const {
         detail: {
           value: {
@@ -95,6 +106,19 @@ export default class Search extends wepy.page {
       } = e
 
       console.log(search)
+      const result = await services.searchRegistry(search, 1)
+      if (result.statusCode === 200) {
+        const {
+          data: {
+            total_count: totalCount,
+            items
+          }
+        } = result
+        this.dataSource[0].push(...items)
+        this.total[0] = `(${totalCount})`
+        this.$apply()
+      }
+      console.log(result)
     }
   }
 }
@@ -171,16 +195,21 @@ export default class Search extends wepy.page {
         background: #fff;
       }
 
+      .shadow__box {
+        box-shadow: 0 0rpx 15rpx 1rpx #bbb;
+      }
+
       .tabs {
         display: flex;
         font-size: 32rpx;
         color: @font_color;
         padding: 0 30rpx;
-        box-shadow: 0 0rpx 15rpx 1rpx #bbb;
+        display: flex;
 
         .tabs__item {
           padding: 18rpx 20rpx;
           font-weight: 500;
+          display: inline-block;
 
           &:active {
             background: rgba(0, 0, 0, .1);

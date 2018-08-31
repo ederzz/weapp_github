@@ -22,7 +22,7 @@ export const getUserStarred = (pageNo, pageSize) => {
   const {
     login
   } = wx.getStorageSync('userInfo')
-  return request(`/users/${login}/starredpage=${pageNo}&per_page=${pageSize}`)
+  return request(`/users/${login}/starred?page=${pageNo}&per_page=${pageSize}`)
 }
 
 /**
@@ -34,7 +34,8 @@ export const getUserFollers = name => request(`/user/${name}}/followers`)
 /**
  * 搜索仓库
  * @param {String} q 搜索关键字
+ * @param {Number} no 分页页面
  * @param {String} sort 排序关键字
  * @param {String} order 顺序or倒叙
  */
-export const searchRegistry = (q, sort = '', order = '') => request(`search/repositories?q=${q}&sort=${sort}&order=${order}`)
+export const searchRegistry = (q, no, sort = '', order = '') => request(`/search/repositories?q=${q}&sort=${sort}&order=${order}&page=${no}&per_page=20`)

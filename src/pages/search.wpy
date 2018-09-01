@@ -23,13 +23,13 @@
           <repository_detail></repository_detail>
         </swiper-item>
         <swiper-item class="swiper__item">
-          <repository_detail></repository_detail>
+          <user_detail></user_detail>
         </swiper-item>
         <swiper-item class="swiper__item">
-          <repository_detail></repository_detail>
+          <view class="">issues</view>
         </swiper-item>
         <swiper-item class="swiper__item">
-          <repository_detail></repository_detail>
+          <view class="">code</view>
         </swiper-item>
     </swiper>
   </view>
@@ -216,19 +216,6 @@ export default class Search extends wepy.page {
 
     .data__container {
       flex-grow: 1;
-
-      .data__wrapper {
-        height: 100%;
-        overflow: auto;
-      }
-
-      .empty__block {
-        color: @main_color;
-        text-align: center;
-        font-size: 50rpx;
-        font-weight: 400;
-        padding-top: 40%;
-      }
     }
   }
 </style>

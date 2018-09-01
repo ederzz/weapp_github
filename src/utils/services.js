@@ -46,4 +46,4 @@ export const searchRegistry = (q, no, sort = '', order = '') => request(`/search
  * @param {Number} no 分页页码
  * @param {String}} order 排序关键字
  */
-export const searchUsers = (q, no, order = '') => request(`/search/users?q=${q}&sort=followers&order=${order}&page=${no}&per_page=20`)
+export const searchUsers = (q, no, order = '') => request(`/search/users?q=${q}&sort=&order=${order}&page=${no}&per_page=20`)

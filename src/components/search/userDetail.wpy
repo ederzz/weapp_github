@@ -1,0 +1,33 @@
+<template>
+  <view>
+    用户
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import * as services from '@/utils/services'
+
+export default class UserDetail extends wepy.page {
+  data = {
+    q: '',
+    pageNo: 1,
+    userDataSource: [],
+    temporaryUsers: [],
+    listData: []
+  }
+
+  events = {
+    async search(q) {
+      this.search = q
+
+      const result = await services.searchUsers(this.search, this.pageNo)
+      console.log(result, '======')
+    }
+  }
+}
+</script>
+
+<style lang='less'>
+
+</style>

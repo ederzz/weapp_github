@@ -19,26 +19,26 @@
       </scroll-view>
     </view>
     <swiper class="data__container" current="{{tabIndex}}" @change="onChange">
-      <repeat for="{{ dataSource }}" key="index" index="dataIndex" item="data">
         <swiper-item class="swiper__item">
-          <scroll-view scroll-y wx:if="{{ data.length }}" class="data__wrapper">
-            <repository_detail :listData.sync="data"></repository_detail>
-          </scroll-view>
-          <view class="empty__block" wx:if="{{ !data.length }}">
-            <view style="margin: 0 0 20rpx;">No search results</view>
-            <view>(T ^ T)</view>
-          </view>
+          <repository_detail></repository_detail>
         </swiper-item>
-      </repeat>
+        <swiper-item class="swiper__item">
+          <repository_detail></repository_detail>
+        </swiper-item>
+        <swiper-item class="swiper__item">
+          <repository_detail></repository_detail>
+        </swiper-item>
+        <swiper-item class="swiper__item">
+          <repository_detail></repository_detail>
+        </swiper-item>
     </swiper>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
-import * as services from '../utils/services.js'
-import { formatMsgTime } from '@/utils/helper'
 import RepositoryDetail from '@/components/search/repositoryDetail'
+import UserDetail from '@/components/search/userDetail'
 
 export default class Search extends wepy.page {
   config = {
@@ -46,7 +46,8 @@ export default class Search extends wepy.page {
   }
 
   components = {
-    repository_detail: RepositoryDetail
+    repository_detail: RepositoryDetail,
+    user_detail: UserDetail
   }
 
   data = {
@@ -58,12 +59,6 @@ export default class Search extends wepy.page {
       'CODE'
     ],
     tabIndex: 0,
-    dataSource: [
-      [],
-      [],
-      [],
-      []
-    ],
     total: [
       '',
       '',
@@ -108,32 +103,13 @@ export default class Search extends wepy.page {
           }
         }
       } = e
+      this.$broadcast('search', search)
+    }
+  }
 
-      const result = await services.searchRegistry(search, 1)
-      if (result.statusCode === 200) {
-        const {
-          data: {
-            total_count: totalCount,
-            items
-          }
-        } = result
-        console.log(items.map(current => Object.assign(
-          {},
-          current,
-          {
-            updatedAt: formatMsgTime(current.updated_at)
-          }
-        )))
-        this.dataSource[0].push(...items.map(current => Object.assign(
-          {},
-          current,
-          {
-            updatedAt: formatMsgTime(current.updated_at)
-          }
-        )))
-        this.total[0] = `(${totalCount})`
-        this.$apply()
-      }
+  events = {
+    updateTotal(total, index) {
+      this.total[index] = total
     }
   }
 }

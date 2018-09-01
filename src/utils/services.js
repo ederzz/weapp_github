@@ -39,3 +39,11 @@ export const getUserFollers = name => request(`/user/${name}}/followers`)
  * @param {String} order 顺序or倒叙
  */
 export const searchRegistry = (q, no, sort = '', order = '') => request(`/search/repositories?q=${q}&sort=${sort}&order=${order}&page=${no}&per_page=20`)
+
+/**
+ * 搜索用户
+ * @param {String} q 搜索关键字
+ * @param {Number} no 分页页码
+ * @param {String}} order 排序关键字
+ */
+export const searchUsers = (q, no, order = '') => request(`/search/users?q=${q}&sort=followers&order=${order}&page=${no}&per_page=20`)

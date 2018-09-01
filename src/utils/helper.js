@@ -182,3 +182,13 @@ export function formatMsgTime (time) {
     return `${constants.monthMap[month - 1]} ${day}，${year}`
   }
 }
+
+/**
+ * 筛选url中的某些字符串
+ * @param {String} str 需要筛选的url
+ * @param {String} otherKey
+ */
+export const filterUrl = (str, otherKey = '') => {
+  const urlReg = new RegExp(`https:\/\/api.github.com\/${otherKey}(.*)`)
+  return urlReg.exec(str)[1] || ''
+}

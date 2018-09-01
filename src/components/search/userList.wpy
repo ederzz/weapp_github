@@ -19,7 +19,7 @@
 import wepy from 'wepy'
 import * as services from '@/utils/services'
 
-export default class UserDetail extends wepy.page {
+export default class UserList extends wepy.component {
   data = {
     search: '',
     pageNo: 1,

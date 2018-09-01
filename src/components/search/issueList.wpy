@@ -1,0 +1,147 @@
+<template>
+  <scroll-view @scrolltolower="load" scroll-y wx:if="{{ listData.length }}" class="data__wrapper">
+    <repeat for="{{ listData }}" key="index" index="index" item="item">
+      <view class="issue">
+        <view class="top">
+          <view class="state">
+            <image src="{{ item.icon }}" class="issue__icon" />
+          </view>
+          <view class="name">{{ item.title }}</view>
+        </view>
+        <view class="bot">
+          {{ item.location }}\t\t\t{{ item.state }}\t\t\t{{ item.time }}
+        </view>
+      </view>
+    </repeat>
+  </scroll-view>
+  <view class="empty__block" wx:if="{{ !listData.length }}">
+    <view style="margin: 0 0 20rpx;">No search results</view>
+    <view>(T ^ T)</view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { formatMsgTime, filterUrl } from '@/utils/helper'
+import * as services from '@/utils/services'
+
+export default class IssueList extends wepy.component {
+  data = {
+    search: '',
+    pageNo: 1,
+    issueDataSource: [],
+    temporaryIssues: [],
+    listData: []
+  }
+
+  events = {
+    async search(q) {
+      this.search = q
+      await this.addIssues()
+    }
+  }
+
+  methods = {
+    async load() {
+      await this.addIssues()
+    }
+  }
+
+  async addIssues() {
+    const result = await services.searchIssues(this.search, this.pageNo)
+    if (result.statusCode === 200) {
+      const {
+        data: {
+          total_count: totalCount,
+          items = []
+        }
+      } = result
+      const data = items.map(current => {
+        const {
+          updated_at: updateAt,
+          state,
+          closed_at: closeAt,
+          title,
+          url
+        } = current
+        let time
+        if (state === 'open') {
+          time = formatMsgTime(updateAt)
+        }
+        if (state === 'closed') {
+          time = formatMsgTime(closeAt)
+        }
+
+        return {
+          title,
+          state,
+          time,
+          location: filterUrl(url, 'repos/').replace('/issues/', '#'),
+          icon: state === 'open' ? '../../images/openissue.png' : '../../images/closedissue.png'
+        }
+      })
+      if (data.length === 20) {
+        this.issueDataSource.push(...data)
+        this.temporaryIssues = []
+        this.pageNo++
+      } else {
+        this.temporaryIssues = data
+      }
+
+      this.listData = this.issueDataSource.concat(this.temporaryIssues)
+      this.$emit('updateTotal', `(${totalCount})`, 2)
+      this.$apply()
+    }
+  }
+}
+</script>
+
+<style lang='less'>
+  @main_color: rgb(39, 100, 253);
+
+  .data__wrapper {
+    height: 100%;
+    overflow: auto;
+
+    .issue {
+      padding: 30rpx;
+      border-bottom: 0.5rpx solid rgba(201, 201, 201, .5);
+
+      .top,
+      .bot {
+        display: flex;
+      }
+
+      .top {
+        .state {
+          .issue__icon {
+            width: 40rpx;
+            height: 40rpx;
+            margin-right: 15rpx;
+          }
+        }
+
+        .name {
+          font-size: 32rpx;
+          font-weight: 500;
+        }
+      }
+
+      .bot {
+        font-size: 26rpx;
+
+        .state {
+          margin: 0 15rpx;
+        }
+      }
+    }
+  }
+
+  .empty__block {
+    color: @main_color;
+    text-align: center;
+    font-size: 50rpx;
+    font-weight: 400;
+    padding-top: 40%;
+  }
+</style>

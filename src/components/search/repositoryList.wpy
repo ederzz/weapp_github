@@ -41,7 +41,7 @@ import wepy from 'wepy'
 import { formatMsgTime } from '@/utils/helper'
 import * as services from '@/utils/services'
 
-export default class RepositroyDetail extends wepy.component {
+export default class RepositroyList extends wepy.component {
   data = {
     search: '',
     pageNo: 1,

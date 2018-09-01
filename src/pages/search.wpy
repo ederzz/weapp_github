@@ -20,13 +20,13 @@
     </view>
     <swiper class="data__container" current="{{tabIndex}}" @change="onChange">
         <swiper-item class="swiper__item">
-          <repository_detail></repository_detail>
+          <repository_list></repository_list>
         </swiper-item>
         <swiper-item class="swiper__item">
-          <user_detail></user_detail>
+          <user_list></user_list>
         </swiper-item>
         <swiper-item class="swiper__item">
-          <view class="">issues</view>
+          <issue_list></issue_list>
         </swiper-item>
         <swiper-item class="swiper__item">
           <view class="">code</view>
@@ -37,8 +37,9 @@
 
 <script>
 import wepy from 'wepy'
-import RepositoryDetail from '@/components/search/repositoryDetail'
-import UserDetail from '@/components/search/userDetail'
+import RepositoryList from '@/components/search/repositoryList'
+import UserList from '@/components/search/userList'
+import IssueList from '@/components/search/issueList'
 
 export default class Search extends wepy.page {
   config = {
@@ -46,8 +47,9 @@ export default class Search extends wepy.page {
   }
 
   components = {
-    repository_detail: RepositoryDetail,
-    user_detail: UserDetail
+    repository_list: RepositoryList,
+    user_list: UserList,
+    issue_list: IssueList
   }
 
   data = {

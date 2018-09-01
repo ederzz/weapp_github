@@ -1,0 +1,100 @@
+<template>
+  <scroll-view @scrolltolower="load" scroll-y wx:if="{{ listData.length }}" class="data__wrapper">
+    <repeat for="{{ listData }}" key="index" index="index" item="item">
+      <view class="code">
+        <view class="repo__name">{{ item.fullName }}</view>
+        <view class="file__name">{{ item.fileName }}</view>
+      </view>
+    </repeat>
+  </scroll-view>
+  <view class="empty__block" wx:if="{{ !listData.length }}">
+    <view style="margin: 0 0 20rpx;">No search results</view>
+    <view>(T ^ T)</view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import * as services from '@/utils/services'
+
+export default class CodeList extends wepy.component {
+  data = {
+    search: '',
+    pageNo: 1,
+    codeDataSource: [],
+    temporaryCodes: [],
+    listData: []
+  }
+
+  events = {
+    async search(q) {
+      this.search = q
+      await this.addCodes()
+    }
+  }
+
+  methods = {
+    async load() {
+      await this.addCodes()
+    }
+  }
+
+  async addCodes() {
+    const result = await services.searchCodes(this.search, this.pageNo)
+    if (result.statusCode === 200) {
+      const {
+        data: {
+          total_count: totalCount,
+          items = []
+        }
+      } = result
+      const data = items.map(current => ({
+        fullName: current.repository.full_name,
+        fileName: current.name
+      }))
+      if (data.length === 20) {
+        this.codeDataSource.push(...data)
+        this.temporaryCodes = []
+        this.pageNo++
+      } else {
+        this.temporaryCodes = data
+      }
+
+      this.listData = this.codeDataSource.concat(this.temporaryCodes)
+      this.$emit('updateTotal', `(${totalCount})`, 3)
+      this.$apply()
+    }
+  }
+}
+</script>
+
+<style lang='less'>
+  @main_color: rgb(39, 100, 253);
+
+  .data__wrapper {
+    height: 100%;
+    overflow: auto;
+
+    .code {
+      padding: 20rpx 30rpx;
+      border-bottom: 0.5rpx solid rgba(201, 201, 201, .5);
+
+      .full_name {
+        font-size: 32rpx;
+        font-weight: 500;
+      }
+
+      .file__name {
+        font-size: 26rpx;
+      }
+    }
+  }
+
+  .empty__block {
+    color: @main_color;
+    text-align: center;
+    font-size: 50rpx;
+    font-weight: 400;
+    padding-top: 40%;
+  }
+</style>

@@ -29,7 +29,7 @@
           <issue_list></issue_list>
         </swiper-item>
         <swiper-item class="swiper__item">
-          <view class="">code</view>
+          <code_list></code_list>
         </swiper-item>
     </swiper>
   </view>
@@ -40,6 +40,7 @@ import wepy from 'wepy'
 import RepositoryList from '@/components/search/repositoryList'
 import UserList from '@/components/search/userList'
 import IssueList from '@/components/search/issueList'
+import CodeList from '@/components/search/codeList'
 
 export default class Search extends wepy.page {
   config = {
@@ -49,7 +50,8 @@ export default class Search extends wepy.page {
   components = {
     repository_list: RepositoryList,
     user_list: UserList,
-    issue_list: IssueList
+    issue_list: IssueList,
+    code_list: CodeList
   }
 
   data = {

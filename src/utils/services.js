@@ -55,3 +55,11 @@ export const searchUsers = (q, no, order = '') => request(`/search/users?q=${q}&
  * @param {String}} order 排序关键字
  */
 export const searchIssues = (q, no, order = '') => request(`/search/issues?q=${q}&sort=&order=${order}&page=${no}&per_page=20`)
+
+/**
+ * 搜索codes
+ * @param {String} q 搜索关键字
+ * @param {Number} no 分页页码
+ * @param {String}} order 排序关键字
+ */
+export const searchCodes = (q, no, order = '') => request(`/search/code?q=${q}&sort=&order=${order}&page=${no}&per_page=20`)

@@ -37,7 +37,7 @@ export default class IssueList extends wepy.component {
   events = {
     async search(q) {
       this.search = q
-      await this.addIssues()
+      await this.addIssues(true)
     }
   }
 
@@ -47,7 +47,7 @@ export default class IssueList extends wepy.component {
     }
   }
 
-  async addIssues() {
+  async addIssues(type) {
     const result = await services.searchIssues(this.search, this.pageNo)
     if (result.statusCode === 200) {
       const {
@@ -80,12 +80,24 @@ export default class IssueList extends wepy.component {
           icon: state === 'open' ? '../../images/openissue.png' : '../../images/closedissue.png'
         }
       })
-      if (data.length === 20) {
-        this.issueDataSource.push(...data)
-        this.temporaryIssues = []
-        this.pageNo++
+
+      if (type) {
+        if (data.length === 20) {
+          this.issueDataSource = data
+          this.temporaryIssues = []
+          this.pageNo++
+        } else {
+          this.temporaryIssues = data
+          this.issueDataSource = []
+        }
       } else {
-        this.temporaryIssues = data
+        if (data.length === 20) {
+          this.issueDataSource.push(...data)
+          this.temporaryIssues = []
+          this.pageNo++
+        } else {
+          this.temporaryIssues = data
+        }
       }
 
       this.listData = this.issueDataSource.concat(this.temporaryIssues)

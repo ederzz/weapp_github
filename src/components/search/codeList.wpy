@@ -1,7 +1,7 @@
 <template>
   <scroll-view @scrolltolower="load" scroll-y wx:if="{{ listData.length }}" class="data__wrapper">
     <repeat for="{{ listData }}" key="index" index="index" item="item">
-      <view class="code">
+      <view class="code" @tap="watchSourceCode">
         <view class="repo__name">{{ item.fullName }}</view>
         <view class="file__name">{{ item.fileName }}</view>
       </view>
@@ -29,17 +29,22 @@ export default class CodeList extends wepy.component {
   events = {
     async search(q) {
       this.search = q
-      await this.addCodes()
+      await this.addCodes(true)
     }
   }
 
   methods = {
     async load() {
       await this.addCodes()
+    },
+    watchSourceCode() {
+      wepy.navigateTo({
+        url: './codeDetail'
+      })
     }
   }
 
-  async addCodes() {
+  async addCodes(type) {
     const result = await services.searchCodes(this.search, this.pageNo)
     if (result.statusCode === 200) {
       const {
@@ -52,12 +57,24 @@ export default class CodeList extends wepy.component {
         fullName: current.repository.full_name,
         fileName: current.name
       }))
-      if (data.length === 20) {
-        this.codeDataSource.push(...data)
-        this.temporaryCodes = []
-        this.pageNo++
+
+      if (type) {
+        if (data.length === 20) {
+          this.codeDataSource = data
+          this.temporaryCodes = []
+          this.pageNo++
+        } else {
+          this.temporaryCodes = data
+          this.codeDataSource = []
+        }
       } else {
-        this.temporaryCodes = data
+        if (data.length === 20) {
+          this.codeDataSource.push(...data)
+          this.temporaryCodes = []
+          this.pageNo++
+        } else {
+          this.temporaryCodes = data
+        }
       }
 
       this.listData = this.codeDataSource.concat(this.temporaryCodes)

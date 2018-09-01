@@ -31,7 +31,7 @@ export default class UserList extends wepy.component {
   events = {
     async search(q) {
       this.search = q
-      await this.addUsers()
+      await this.addUsers(true)
     }
   }
 
@@ -41,7 +41,7 @@ export default class UserList extends wepy.component {
     }
   }
 
-  async addUsers() {
+  async addUsers(type) {
     const result = await services.searchUsers(this.search, this.pageNo)
     if (result.statusCode === 200) {
       const {
@@ -54,12 +54,24 @@ export default class UserList extends wepy.component {
         avatarUrl: current.avatar_url,
         name: current.login
       }))
-      if (data.length === 20) {
-        this.userDataSource.push(...data)
-        this.temporaryUsers = []
-        this.pageNo++
+
+      if (type) {
+        if (data.length === 20) {
+          this.userDataSource = data
+          this.temporaryUsers = []
+          this.pageNo++
+        } else {
+          this.temporaryUsers = data
+          this.userDataSource = []
+        }
       } else {
-        this.temporaryUsers = data
+        if (data.length === 20) {
+          this.userDataSource.push(...data)
+          this.temporaryUsers = []
+          this.pageNo++
+        } else {
+          this.temporaryUsers = data
+        }
       }
 
       this.listData = this.userDataSource.concat(this.temporaryUsers)

@@ -59,11 +59,11 @@ export default class RepositroyList extends wepy.component {
   events = {
     async search(q) {
       this.search = q
-      await this.addRepository()
+      await this.addRepository(true)
     }
   }
 
-  async addRepository() {
+  async addRepository(type) {
     const result = await services.searchRegistry(this.search, this.pageNo)
     if (result.statusCode === 200) {
       const {
@@ -81,12 +81,24 @@ export default class RepositroyList extends wepy.component {
         fullName: current.full_name,
         avatarUrl: current.owner.avatar_url
       }))
-      if (data.length === 20) {
-        this.repositoryDataSource.push(...data)
-        this.temporaryRepositories = []
-        this.pageNo++
+
+      if (type) {
+        if (data.length === 20) {
+          this.repositoryDataSource = data
+          this.temporaryRepositories = []
+          this.pageNo++
+        } else {
+          this.temporaryRepositories = data
+          this.repositoryDataSource = []
+        }
       } else {
-        this.temporaryRepositories = data
+        if (data.length === 20) {
+          this.repositoryDataSource.push(...data)
+          this.temporaryRepositories = []
+          this.pageNo++
+        } else {
+          this.temporaryRepositories = data
+        }
       }
 
       this.listData = this.repositoryDataSource.concat(this.temporaryRepositories)

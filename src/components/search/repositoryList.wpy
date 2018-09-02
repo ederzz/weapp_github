@@ -125,6 +125,7 @@ export default class RepositroyList extends wepy.component {
         width: 100rpx;
         height: 100rpx;
         margin: auto 30rpx;
+        background: rgba(0, 0, 0, .1);
       }
     }
 

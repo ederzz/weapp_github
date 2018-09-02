@@ -76,7 +76,7 @@ export default class IssueList extends wepy.component {
           title,
           state,
           time,
-          location: filterUrl(url, 'repos/').replace('/issues/', '#'),
+          location: filterUrl(url, '/repos/').replace('/issues/', '#'),
           icon: state === 'open' ? '../../images/openissue.png' : '../../images/closedissue.png'
         }
       })

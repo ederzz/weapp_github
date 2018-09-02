@@ -191,6 +191,6 @@ export function formatMsgTime (time) {
  * @param {String} otherKey
  */
 export const filterUrl = (str, otherKey = '') => {
-  const urlReg = new RegExp(`https:\/\/api.github.com\/${otherKey}(.*)`)
+  const urlReg = new RegExp(`https:\/\/api.github.com${otherKey}(.*)`)
   return urlReg.exec(str)[1] || ''
 }

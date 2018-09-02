@@ -1,0 +1,151 @@
+<template>
+  <view class="user__container">
+    <view class="user__detail">
+      <view class="user__info">
+        <view class="avatar__wrapper">
+          <image src="{{ userInfo.avatar_url }}" class="avatar" />
+        </view>
+        <view class="name__wrapper">
+          <view class="name">{{ userInfo.name }}</view>
+          <view class="nick__name">{{ userInfo.login }}</view>
+        </view>
+      </view>
+      <view wx:if="{{ userInfo.bio }}" class="bio">{{ userInfo.bio }}</view>
+      <view class="follow__detail">
+        <view class="following">FOLLOWING ({{ userInfo.following }})</view>
+        <view class="vertical__line"></view>
+        <view class="followers">FOLLOWERS ({{ userInfo.followers }})</view>
+      </view>
+      <view class="location">
+        <image src="../images/location.png" class="user__icon" />
+        <view class="location__info">{{ userInfo.location }}</view>
+      </view>
+      <view class="email">
+        <image src="../images/email.png" class="user__icon" />
+        <view class="email__info">{{ userInfo.email || '' }}</view>
+      </view>
+      <view class="created__at">
+        <image src="../images/clock.png" class="user__icon" />
+        <view class="create__info">{{ userInfo.created_at }}</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { filterUrl, request } from '@/utils/helper'
+
+export default class UserDetail extends wepy.page {
+  config = {
+    navigationBarTitleText: 'user'
+  }
+
+  data = {
+    userInfo: {}
+  }
+
+  async onLoad(options) {
+    const {
+      url = ''
+    } = options
+    if (!url || !filterUrl(url)) {
+      return null
+    }
+    const result = await request(filterUrl(url))
+    if (result.statusCode === 200) {
+      this.userInfo = result.data
+      this.$apply()
+    }
+  }
+}
+</script>
+
+<style lang='less'>
+  @font_color: rgb(99, 99, 99);
+
+  .border_bottom {
+    border-bottom: 0.5rpx solid rgba(201, 201, 201, 1);
+  }
+
+  .user__container {
+    .user__detail {
+      padding: 60rpx 40rpx 0;
+
+      .user__info {
+        display: flex;
+
+        .avatar__wrapper {
+          margin-right: 40rpx;
+
+          .avatar {
+            width: 200rpx;
+            height: 200rpx;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.1);
+          }
+        }
+
+        .name__wrapper {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+
+          .name {
+            color: @font_color;
+            font-size: 36rpx;
+          }
+
+          .nick__name {
+            font-size: 42rpx;
+          }
+        }
+      }
+
+      .bio {
+        color: @font_color;
+        font-size: 36rpx;
+        margin-top: 10rpx;
+      }
+
+      .follow__detail,
+      .location,
+      .email {
+        .border_bottom;
+      }
+
+      .follow__detail {
+        display: flex;
+        align-items: center;
+
+        .vertical__line {
+          width: 1rpx;
+          height: 48rpx;
+          background: @font_color;
+        }
+
+        .following,
+        .followers {
+          flex: 1;
+          text-align: center;
+          font-size: 36rpx;
+          color: @font_color;
+          padding: 40rpx 0;
+        }
+      }
+
+      .user__icon {
+        width: 40rpx;
+        height: 40rpx;
+        margin-right: 40rpx;
+      }
+
+      .location,
+      .email,
+      .created__at {
+        display: flex;
+        padding: 40rpx 0;
+      }
+    }
+  }
+</style>

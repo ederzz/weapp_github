@@ -1,7 +1,7 @@
 <template>
   <scroll-view @scrolltolower="load" scroll-y wx:if="{{ listData.length }}" class="data__wrapper">
     <repeat for="{{ listData }}" key="index" index="index" item="item">
-      <view class="code" @tap="watchSourceCode">
+      <view class="code" @tap="watchSourceCode({{ item.url }})">
         <view class="repo__name">{{ item.fullName }}</view>
         <view class="file__name">{{ item.fileName }}</view>
       </view>
@@ -37,9 +37,9 @@ export default class CodeList extends wepy.component {
     async load() {
       await this.addCodes()
     },
-    watchSourceCode() {
+    watchSourceCode(url) {
       wepy.navigateTo({
-        url: './codeDetail'
+        url: `./codeDetail?url=${url}`
       })
     }
   }
@@ -55,7 +55,8 @@ export default class CodeList extends wepy.component {
       } = result
       const data = items.map(current => ({
         fullName: current.repository.full_name,
-        fileName: current.name
+        fileName: current.name,
+        url: current.git_url
       }))
 
       if (type) {

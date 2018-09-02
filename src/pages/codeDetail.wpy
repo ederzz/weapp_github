@@ -1,6 +1,6 @@
 <template>
   <view class="code__wrapper">
-    <repeat for="{{ dataSource }}" key="index" index="index" item="item">
+    <repeat for="{{ sourceCode }}" key="index" index="index" item="item">
       <view class="code__line">
         <text class="index">{{ index + 1 }}</text><text>{{ item }}</text>
       </view>
@@ -10,6 +10,7 @@
 
 <script>
 import wepy from 'wepy'
+import { request, Base64 } from '@/utils/helper'
 
 export default class CodeDetail extends wepy.page {
   config = {
@@ -17,46 +18,52 @@ export default class CodeDetail extends wepy.page {
   }
 
   data = {
-    dataSource: [
-      '222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
-      '222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
-      '222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
-      '222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
-      '222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
-      '222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
-      '222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
-      '222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
-      '222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
-      '222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222',
-    ]
+    sourceCode: []
   }
 
   async onLoad(options) {
     const {
       url = ''
     } = options
+    const urlReg = /https:\/\/api.github.com(.*)/
 
-    if (url) {
-      // TODO :解析
+    if (url && urlReg.exec(url)[1]) {
+      const result = await request(urlReg.exec(url)[1])
+      if (result.statusCode === 200) {
+        const {
+          data: {
+            content = ''
+          }
+        } = result
+
+        if (content) {
+          this.sourceCode = Base64.decode(content).split('\n')
+          this.$apply()
+        }
+      }
     }
   }
 }
 </script>
 
 <style lang='less'>
+  @main_color: rgb(39, 100, 253);
+
   .code__wrapper {
     overflow: scroll;
+    font-size: 30rpx;
 
     .code__line {
       white-space: nowrap;
+
       .index {
         width: 100rpx;
-        color: rgba(0, 0, 0, .5);
+        color: rgba(0, 0, 0, .3);
         margin-right: 20rpx;
         text-align: center;
-        border-right: 1rpx solid rgba(0, 0, 0, .5);
+        border-right: 1rpx solid rgba(0, 0, 0, .3);
         display: inline-block;
-        width: 100rpx;
+        width: 102rpx;
       }
     }
   }

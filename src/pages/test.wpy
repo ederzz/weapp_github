@@ -1,7 +1,7 @@
 <template>
   <view>
     <repeat for="{{ dataSource }}" key="index" index="index" item="item">
-      <custom_image img-info="{{item}}"></custom_image>
+      <custom_image img-src="{{item}}"></custom_image>
     </repeat>
   </view>
 </template>
@@ -19,18 +19,9 @@ export default class Test extends wepy.page {
 
   data = {
     dataSource: [
-      {
-        src: 'ceshi1',
-        show: false
-      },
-      {
-        src: 'ceshi2',
-        show: false
-      },
-      {
-        src: 'ceshi3',
-        show: false
-      },
+        'ceshi1',
+        'ceshi2',
+        'ceshi3',
     ],
     obj: [
       {

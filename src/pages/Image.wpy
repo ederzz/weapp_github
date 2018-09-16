@@ -1,0 +1,31 @@
+<template>
+  <view class="jzx">
+    {{ obj.name }}
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Image extends wepy.component {
+  props = {
+    obj: Object
+  }
+
+  onLoad() {
+    console.log(111)
+    // this.obj = {
+    //   name: '3333'
+    // }
+    // setTimeout(() => {
+    //   wx.createIntersectionObserver().relativeToViewport({bottom: 100}).observe('.jzx', (res) => {
+    //     console.log(res, '组件内')
+    //   })
+    // }, 1000);
+  }
+}
+</script>
+
+<style lang='less'>
+
+</style>

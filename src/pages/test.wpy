@@ -1,0 +1,63 @@
+<template>
+  <view>
+    <repeat for="{{ dataSource }}" key="index" index="index" item="item">
+      <custom_image img-info="{{item}}"></custom_image>
+    </repeat>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Test extends wepy.page {
+  config = {
+    navigationBarTitleText: 'test',
+    usingComponents: {
+      custom_image: '../components/Image/custom_image'
+    }
+  }
+
+  data = {
+    dataSource: [
+      {
+        src: 'ceshi1',
+        show: false
+      },
+      {
+        src: 'ceshi2',
+        show: false
+      },
+      {
+        src: 'ceshi3',
+        show: false
+      },
+    ],
+    obj: [
+      {
+        name: 'jzx'
+      },
+      {
+        name: 'sst'
+      }
+    ]
+  }
+
+  onLoad() {
+    const query = wx.createSelectorQuery()
+    query.select('.img').boundingClientRect()
+    query.selectAll('.test').boundingClientRect()
+    query.selectViewport().scrollOffset()
+    // query.exec(function(res){
+    //   console.log(res)
+    // })
+
+    // wx.createIntersectionObserver().relativeToViewport({bottom: 100}).observe('.img', (res) => {
+    //   console.log(res)
+    // })
+  }
+}
+</script>
+
+<style lang='less'>
+
+</style>

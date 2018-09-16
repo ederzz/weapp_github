@@ -1,0 +1,29 @@
+<template>
+  <view>
+
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Repository extends wepy.page {
+  config = {
+    navigationBarTitleText: ''
+  }
+
+  onLoad(options) {
+    const {} = options
+    const result = {}
+    if (result.success) {
+      const {
+        contents_url // 请求后筛选出readme内容
+      } = result
+    }
+  }
+}
+</script>
+
+<style lang='less'>
+
+</style>

@@ -194,3 +194,20 @@ export const filterUrl = (str, otherKey = '') => {
   const urlReg = new RegExp(`https:\/\/api.github.com${otherKey}(.*)`)
   return urlReg.exec(str)[1] || ''
 }
+
+/**
+ * 解析时间对象
+ * @param {String} str 时间字符串
+ */
+export const parseDateStr = str => {
+  const dateObj = new Date(str.replace(/-/g, '/'))
+
+  return {
+    year: dateObj.getFullYear(),
+    month: dateObj.getMonth() + 1,
+    day: dateObj.getDate(),
+    hour: dateObj.getHours(),
+    minute: dateObj.getMinutes(),
+    second: dateObj.getSeconds()
+  }
+}

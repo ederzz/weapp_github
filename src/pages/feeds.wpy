@@ -9,9 +9,9 @@
 import wepy from 'wepy'
 
 export default class Feeds extends wepy.page {
-  config = {
-    navigationBarTitleText: 'Feeds'
-  }
+    config = {
+        navigationBarTitleText: 'Feeds'
+    }
 }
 </script>
 

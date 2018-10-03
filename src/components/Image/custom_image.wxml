@@ -1,4 +1,0 @@
-<view class="custom__wrapper">
-  测试
-  <image src="{{ show ? imgSrc : '' }}" class="custom__img" />
-</view>

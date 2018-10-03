@@ -26,85 +26,85 @@ import { formatMsgTime, filterUrl } from '@/utils/helper'
 import * as services from '@/utils/services'
 
 export default class IssueList extends wepy.component {
-  data = {
-    search: '',
-    pageNo: 1,
-    issueDataSource: [],
-    temporaryIssues: [],
-    listData: []
-  }
-
-  events = {
-    async search(q) {
-      this.search = q
-      await this.addIssues(true)
+    data = {
+        search: '',
+        pageNo: 1,
+        issueDataSource: [],
+        temporaryIssues: [],
+        listData: []
     }
-  }
 
-  methods = {
-    async load() {
-      await this.addIssues()
+    events = {
+        async search(q) {
+            this.search = q
+            await this.addIssues(true)
+        }
     }
-  }
 
-  async addIssues(type) {
-    const result = await services.searchIssues(this.search, this.pageNo)
-    if (result.statusCode === 200) {
-      const {
-        data: {
-          total_count: totalCount,
-          items = []
+    methods = {
+        async load() {
+            await this.addIssues()
         }
-      } = result
-      const data = items.map(current => {
-        const {
-          updated_at: updateAt,
-          state,
-          closed_at: closeAt,
-          title,
-          url
-        } = current
-        let time
-        if (state === 'open') {
-          time = formatMsgTime(updateAt)
-        }
-        if (state === 'closed') {
-          time = formatMsgTime(closeAt)
-        }
-
-        return {
-          title,
-          state,
-          time,
-          location: filterUrl(url, '/repos/').replace('/issues/', '#'),
-          icon: state === 'open' ? '../../images/openissue.png' : '../../images/closedissue.png'
-        }
-      })
-
-      if (type) {
-        if (data.length === 20) {
-          this.issueDataSource = data
-          this.temporaryIssues = []
-          this.pageNo++
-        } else {
-          this.temporaryIssues = data
-          this.issueDataSource = []
-        }
-      } else {
-        if (data.length === 20) {
-          this.issueDataSource.push(...data)
-          this.temporaryIssues = []
-          this.pageNo++
-        } else {
-          this.temporaryIssues = data
-        }
-      }
-
-      this.listData = this.issueDataSource.concat(this.temporaryIssues)
-      this.$emit('updateTotal', `(${totalCount})`, 2)
-      this.$apply()
     }
-  }
+
+    async addIssues(type) {
+        const result = await services.searchIssues(this.search, this.pageNo)
+        if (result.statusCode === 200) {
+            const {
+                data: {
+                    total_count: totalCount,
+                    items = []
+                }
+            } = result
+            const data = items.map(current => {
+                const {
+                    updated_at: updateAt,
+                    state,
+                    closed_at: closeAt,
+                    title,
+                    url
+                } = current
+                let time
+                if (state === 'open') {
+                    time = formatMsgTime(updateAt)
+                }
+                if (state === 'closed') {
+                    time = formatMsgTime(closeAt)
+                }
+
+                return {
+                    title,
+                    state,
+                    time,
+                    location: filterUrl(url, '/repos/').replace('/issues/', '#'),
+                    icon: state === 'open' ? '../../images/openissue.png' : '../../images/closedissue.png'
+                }
+            })
+
+            if (type) {
+                if (data.length === 20) {
+                    this.issueDataSource = data
+                    this.temporaryIssues = []
+                    this.pageNo++
+                } else {
+                    this.temporaryIssues = data
+                    this.issueDataSource = []
+                }
+            } else {
+                if (data.length === 20) {
+                    this.issueDataSource.push(...data)
+                    this.temporaryIssues = []
+                    this.pageNo++
+                } else {
+                    this.temporaryIssues = data
+                }
+            }
+
+            this.listData = this.issueDataSource.concat(this.temporaryIssues)
+            this.$emit('updateTotal', `(${totalCount})`, 2)
+            this.$apply()
+        }
+    }
 }
 </script>
 

@@ -24,57 +24,57 @@ import wepy from 'wepy'
 import * as services from '../utils/services.js'
 
 export default class Login extends wepy.page {
-  config = {
-    navigationBarTitleText: '登录',
-    navigationBarBackgroundColor: '#1a237e',
-    navigationBarTextStyle: 'white'
-  }
-
-  data = {
-    pwdFocus: false,
-    userNameFocus: false
-  }
-
-  methods = {
-    async onSubmit(e) {
-      const {
-        detail: {
-          value: {
-            username,
-            pwd
-          }
-        }
-      } = e
-
-      const result = await services.login(username, pwd)
-      if (result.statusCode === 200) {
-        const { data } = result
-        wx.setStorageSync('userInfo', data)
-        wepy.switchTab({ url: './feeds' })
-      }
-    },
-    onFocus(name) {
-      if (name === 'username') {
-        this.userNameFocus = true
-      } else {
-        this.pwdFocus = true
-      }
-    },
-    onBlur(name, e) {
-      const {
-        detail: {
-          value = ''
-        }
-      } = e
-      if (!value) {
-        if (name === 'username') {
-          this.userNameFocus = false
-        } else {
-          this.pwdFocus = false
-        }
-      }
+    config = {
+        navigationBarTitleText: '登录',
+        navigationBarBackgroundColor: '#1a237e',
+        navigationBarTextStyle: 'white'
     }
-  }
+
+    data = {
+        pwdFocus: false,
+        userNameFocus: false
+    }
+
+    methods = {
+        async onSubmit(e) {
+            const {
+                detail: {
+                    value: {
+                        username,
+                        pwd
+                    }
+                }
+            } = e
+
+            const result = await services.login(username, pwd)
+            if (result.statusCode === 200) {
+                const { data } = result
+                wx.setStorageSync('userInfo', data)
+                wepy.switchTab({ url: './feeds' })
+            }
+        },
+        onFocus(name) {
+            if (name === 'username') {
+                this.userNameFocus = true
+            } else {
+                this.pwdFocus = true
+            }
+        },
+        onBlur(name, e) {
+            const {
+                detail: {
+                    value = ''
+                }
+            } = e
+            if (!value) {
+                if (name === 'username') {
+                    this.userNameFocus = false
+                } else {
+                    this.pwdFocus = false
+                }
+            }
+        }
+    }
 }
 </script>
 

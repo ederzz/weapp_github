@@ -13,36 +13,36 @@ import wepy from 'wepy'
 import { request, Base64 } from '@/utils/helper'
 
 export default class CodeDetail extends wepy.page {
-  config = {
-    navigationBarTitleText: 'source code'
-  }
-
-  data = {
-    sourceCode: []
-  }
-
-  async onLoad(options) {
-    const {
-      url = ''
-    } = options
-    const urlReg = /https:\/\/api.github.com(.*)/
-
-    if (url && urlReg.exec(url)[1]) {
-      const result = await request(urlReg.exec(url)[1])
-      if (result.statusCode === 200) {
-        const {
-          data: {
-            content = ''
-          }
-        } = result
-
-        if (content) {
-          this.sourceCode = Base64.decode(content).split('\n')
-          this.$apply()
-        }
-      }
+    config = {
+        navigationBarTitleText: 'source code'
     }
-  }
+
+    data = {
+        sourceCode: []
+    }
+
+    async onLoad(options) {
+        const {
+            url = ''
+        } = options
+        const urlReg = /https:\/\/api.github.com(.*)/
+
+        if (url && urlReg.exec(url)[1]) {
+            const result = await request(urlReg.exec(url)[1])
+            if (result.statusCode === 200) {
+                const {
+                    data: {
+                        content = ''
+                    }
+                } = result
+
+                if (content) {
+                    this.sourceCode = Base64.decode(content).split('\n')
+                    this.$apply()
+                }
+            }
+        }
+    }
 }
 </script>
 

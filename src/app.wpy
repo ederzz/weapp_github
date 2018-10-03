@@ -19,81 +19,79 @@ import wepy from 'wepy'
 import 'wepy-async-function'
 
 export default class extends wepy.app {
-  config = {
-    pages: [
-      'pages/test',
-      'pages/search',
-      'pages/feeds',
-      'pages/login',
-      'pages/index',
-      'pages/personalCenter',
-      'pages/codeDetail',
-      'pages/userDetail'
-    ],
-    window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
-    },
-    tabBar: {
-      list: [
-        {
-          pagePath: 'pages/feeds',
-          text: 'Feeds'
+    config = {
+        pages: [
+            'pages/search',
+            'pages/feeds',
+            'pages/login',
+            'pages/index',
+            'pages/personalCenter',
+            'pages/codeDetail',
+            'pages/userDetail'
+        ],
+        window: {
+            backgroundTextStyle: 'light',
+            navigationBarBackgroundColor: '#fff',
+            navigationBarTitleText: 'WeChat',
+            navigationBarTextStyle: 'black'
         },
-        {
-          pagePath: 'pages/personalCenter',
-          text: '个人中心'
+        tabBar: {
+            list: [
+                {
+                    pagePath: 'pages/feeds',
+                    text: 'Feeds'
+                },
+                {
+                    pagePath: 'pages/personalCenter',
+                    text: '个人中心'
+                }
+            ]
         }
-      ]
-
     }
-  }
 
-  globalData = {
-    userInfo: null
-  }
-
-  constructor () {
-    super()
-    this.use('requestfix')
-    this.use('promisify')
-  }
-
-  async onLaunch() {
-    this.testAsync()
-
-    console.log(wx.getStorageSync('userInfo'), '个人信息')
-    if (!wx.getStorageSync('userInfo')) {
-      wepy.redirectTo({ url: 'pages/login' })
+    globalData = {
+        userInfo: null
     }
-  }
 
-  sleep (s) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve('promise resolved')
-      }, s * 1000)
-    })
-  }
-
-  async testAsync () {
-    const data = await this.sleep(3)
-    console.log(data)
-  }
-
-  getUserInfo(cb) {
-    const that = this
-    if (this.globalData.userInfo) {
-      return this.globalData.userInfo
+    constructor () {
+        super()
+        this.use('requestfix')
+        this.use('promisify')
     }
-    wepy.getUserInfo({
-      success (res) {
-        that.globalData.userInfo = res.userInfo
-        cb && cb(res.userInfo)
-      }
-    })
-  }
+
+    async onLaunch() {
+        this.testAsync()
+
+        console.log(wx.getStorageSync('userInfo'), '个人信息')
+        if (!wx.getStorageSync('userInfo')) {
+            wepy.redirectTo({ url: 'pages/login' })
+        }
+    }
+
+    sleep (s) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('promise resolved')
+            }, s * 1000)
+        })
+    }
+
+    async testAsync () {
+        const data = await this.sleep(3)
+        console.log(data)
+    }
+
+    getUserInfo(cb) {
+        const that = this
+        if (this.globalData.userInfo) {
+            return this.globalData.userInfo
+        }
+        wepy.getUserInfo({
+            success (res) {
+                that.globalData.userInfo = res.userInfo
+                cb && cb(res.userInfo)
+            }
+        })
+    }
 }
 </script>

@@ -8,9 +8,9 @@
 import wepy from 'wepy'
 
 export default class PersonalCenter extends wepy.page {
-  config = {
-    navigationBarTitleText: '个人中心'
-  }
+    config = {
+        navigationBarTitleText: '个人中心'
+    }
 }
 </script>
 

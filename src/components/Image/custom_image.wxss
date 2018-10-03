@@ -1,9 +1,0 @@
-.custom__wrapper {
-  color: red;
-  border: 1rpx solid red;
-}
-
-.custom__img {
-  width: 750rpx;
-  height: 800rpx;
-}

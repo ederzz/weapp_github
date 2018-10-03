@@ -18,71 +18,71 @@ import wepy from 'wepy'
 import * as services from '@/utils/services'
 
 export default class CodeList extends wepy.component {
-  data = {
-    search: '',
-    pageNo: 1,
-    codeDataSource: [],
-    temporaryCodes: [],
-    listData: []
-  }
-
-  events = {
-    async search(q) {
-      this.search = q
-      await this.addCodes(true)
+    data = {
+        search: '',
+        pageNo: 1,
+        codeDataSource: [],
+        temporaryCodes: [],
+        listData: []
     }
-  }
 
-  methods = {
-    async load() {
-      await this.addCodes()
-    },
-    watchSourceCode(url) {
-      wepy.navigateTo({
-        url: `./codeDetail?url=${url}`
-      })
+    events = {
+        async search(q) {
+            this.search = q
+            await this.addCodes(true)
+        }
     }
-  }
 
-  async addCodes(type) {
-    const result = await services.searchCodes(this.search, this.pageNo)
-    if (result.statusCode === 200) {
-      const {
-        data: {
-          total_count: totalCount,
-          items = []
+    methods = {
+        async load() {
+            await this.addCodes()
+        },
+        watchSourceCode(url) {
+            wepy.navigateTo({
+                url: `./codeDetail?url=${url}`
+            })
         }
-      } = result
-      const data = items.map(current => ({
-        fullName: current.repository.full_name,
-        fileName: current.name,
-        url: current.git_url
-      }))
-
-      if (type) {
-        if (data.length === 20) {
-          this.codeDataSource = data
-          this.temporaryCodes = []
-          this.pageNo++
-        } else {
-          this.temporaryCodes = data
-          this.codeDataSource = []
-        }
-      } else {
-        if (data.length === 20) {
-          this.codeDataSource.push(...data)
-          this.temporaryCodes = []
-          this.pageNo++
-        } else {
-          this.temporaryCodes = data
-        }
-      }
-
-      this.listData = this.codeDataSource.concat(this.temporaryCodes)
-      this.$emit('updateTotal', `(${totalCount})`, 3)
-      this.$apply()
     }
-  }
+
+    async addCodes(type) {
+        const result = await services.searchCodes(this.search, this.pageNo)
+        if (result.statusCode === 200) {
+            const {
+                data: {
+                    total_count: totalCount,
+                    items = []
+                }
+            } = result
+            const data = items.map(current => ({
+                fullName: current.repository.full_name,
+                fileName: current.name,
+                url: current.git_url
+            }))
+
+            if (type) {
+                if (data.length === 20) {
+                    this.codeDataSource = data
+                    this.temporaryCodes = []
+                    this.pageNo++
+                } else {
+                    this.temporaryCodes = data
+                    this.codeDataSource = []
+                }
+            } else {
+                if (data.length === 20) {
+                    this.codeDataSource.push(...data)
+                    this.temporaryCodes = []
+                    this.pageNo++
+                } else {
+                    this.temporaryCodes = data
+                }
+            }
+
+            this.listData = this.codeDataSource.concat(this.temporaryCodes)
+            this.$emit('updateTotal', `(${totalCount})`, 3)
+            this.$apply()
+        }
+    }
 }
 </script>
 

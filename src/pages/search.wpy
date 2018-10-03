@@ -43,79 +43,79 @@ import IssueList from '@/components/search/issueList'
 import CodeList from '@/components/search/codeList'
 
 export default class Search extends wepy.page {
-  config = {
-    navigationBarTitleText: '搜索'
-  }
-
-  components = {
-    repository_list: RepositoryList,
-    user_list: UserList,
-    issue_list: IssueList,
-    code_list: CodeList
-  }
-
-  data = {
-    inputFocus: false,
-    tabs: [
-      'REPOSITORIES',
-      'USES',
-      'ISSUES',
-      'CODE'
-    ],
-    tabIndex: 0,
-    total: [
-      '',
-      '',
-      '',
-      ''
-    ],
-    scrollLeft: 0
-  }
-
-  methods = {
-    onChange(e) {
-      const {
-        detail: {
-          current
-        }
-      } = e
-      this.tabIndex = current
-      this.scrollLeft = 20 * current
-    },
-    switchTab(index) {
-      this.tabIndex = index
-    },
-    searchFocus() {
-      this.inputFocus = true
-    },
-    searchBlur(e) {
-      const {
-        detail: {
-          value
-        }
-      } = e
-
-      if (!value) {
-        this.inputFocus = false
-      }
-    },
-    async onSeach(e) {
-      const {
-        detail: {
-          value: {
-            search = ''
-          }
-        }
-      } = e
-      this.$broadcast('search', search)
+    config = {
+        navigationBarTitleText: '搜索'
     }
-  }
 
-  events = {
-    updateTotal(total, index) {
-      this.total[index] = total
+    components = {
+        repository_list: RepositoryList,
+        user_list: UserList,
+        issue_list: IssueList,
+        code_list: CodeList
     }
-  }
+
+    data = {
+        inputFocus: false,
+        tabs: [
+            'REPOSITORIES',
+            'USES',
+            'ISSUES',
+            'CODE'
+        ],
+        tabIndex: 0,
+        total: [
+            '',
+            '',
+            '',
+            ''
+        ],
+        scrollLeft: 0
+    }
+
+    methods = {
+        onChange(e) {
+            const {
+                detail: {
+                    current
+                }
+            } = e
+            this.tabIndex = current
+            this.scrollLeft = 20 * current
+        },
+        switchTab(index) {
+            this.tabIndex = index
+        },
+        searchFocus() {
+            this.inputFocus = true
+        },
+        searchBlur(e) {
+            const {
+                detail: {
+                    value
+                }
+            } = e
+
+            if (!value) {
+                this.inputFocus = false
+            }
+        },
+        async onSeach(e) {
+            const {
+                detail: {
+                    value: {
+                        search = ''
+                    }
+                }
+            } = e
+            this.$broadcast('search', search)
+        }
+    }
+
+    events = {
+        updateTotal(total, index) {
+            this.total[index] = total
+        }
+    }
 }
 </script>
 

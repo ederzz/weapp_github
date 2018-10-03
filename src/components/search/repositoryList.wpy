@@ -42,70 +42,70 @@ import { formatMsgTime } from '@/utils/helper'
 import * as services from '@/utils/services'
 
 export default class RepositroyList extends wepy.component {
-  data = {
-    search: '',
-    pageNo: 1,
-    repositoryDataSource: [],
-    temporaryRepositories: [],
-    listData: []
-  }
-
-  methods = {
-    async load() {
-      await this.addRepository()
+    data = {
+        search: '',
+        pageNo: 1,
+        repositoryDataSource: [],
+        temporaryRepositories: [],
+        listData: []
     }
-  }
 
-  events = {
-    async search(q) {
-      this.search = q
-      await this.addRepository(true)
+    methods = {
+        async load() {
+            await this.addRepository()
+        }
     }
-  }
 
-  async addRepository(type) {
-    const result = await services.searchRegistry(this.search, this.pageNo)
-    if (result.statusCode === 200) {
-      const {
-        data: {
-          total_count: totalCount,
-          items = []
+    events = {
+        async search(q) {
+            this.search = q
+            await this.addRepository(true)
         }
-      } = result
-      const data = items.map(current => ({
-        updatedAt: formatMsgTime(current.updated_at),
-        stars: current.stargazers_count,
-        forks: current.forks,
-        size: current.size,
-        language: current.language,
-        fullName: current.full_name,
-        avatarUrl: current.owner.avatar_url
-      }))
-
-      if (type) {
-        if (data.length === 20) {
-          this.repositoryDataSource = data
-          this.temporaryRepositories = []
-          this.pageNo++
-        } else {
-          this.temporaryRepositories = data
-          this.repositoryDataSource = []
-        }
-      } else {
-        if (data.length === 20) {
-          this.repositoryDataSource.push(...data)
-          this.temporaryRepositories = []
-          this.pageNo++
-        } else {
-          this.temporaryRepositories = data
-        }
-      }
-
-      this.listData = this.repositoryDataSource.concat(this.temporaryRepositories)
-      this.$emit('updateTotal', `(${totalCount})`, 0)
-      this.$apply()
     }
-  }
+
+    async addRepository(type) {
+        const result = await services.searchRegistry(this.search, this.pageNo)
+        if (result.statusCode === 200) {
+            const {
+                data: {
+                    total_count: totalCount,
+                    items = []
+                }
+            } = result
+            const data = items.map(current => ({
+                updatedAt: formatMsgTime(current.updated_at),
+                stars: current.stargazers_count,
+                forks: current.forks,
+                size: current.size,
+                language: current.language,
+                fullName: current.full_name,
+                avatarUrl: current.owner.avatar_url
+            }))
+
+            if (type) {
+                if (data.length === 20) {
+                    this.repositoryDataSource = data
+                    this.temporaryRepositories = []
+                    this.pageNo++
+                } else {
+                    this.temporaryRepositories = data
+                    this.repositoryDataSource = []
+                }
+            } else {
+                if (data.length === 20) {
+                    this.repositoryDataSource.push(...data)
+                    this.temporaryRepositories = []
+                    this.pageNo++
+                } else {
+                    this.temporaryRepositories = data
+                }
+            }
+
+            this.listData = this.repositoryDataSource.concat(this.temporaryRepositories)
+            this.$emit('updateTotal', `(${totalCount})`, 0)
+            this.$apply()
+        }
+    }
 }
 </script>
 

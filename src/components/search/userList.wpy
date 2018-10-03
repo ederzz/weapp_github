@@ -20,71 +20,71 @@ import wepy from 'wepy'
 import * as services from '@/utils/services'
 
 export default class UserList extends wepy.component {
-  data = {
-    search: '',
-    pageNo: 1,
-    userDataSource: [],
-    temporaryUsers: [],
-    listData: []
-  }
-
-  events = {
-    async search(q) {
-      this.search = q
-      await this.addUsers(true)
+    data = {
+        search: '',
+        pageNo: 1,
+        userDataSource: [],
+        temporaryUsers: [],
+        listData: []
     }
-  }
 
-  methods = {
-    async load() {
-      await this.addUsers()
-    },
-    watchUser(url) {
-      wepy.navigateTo({
-        url: `./userDetail?url=${url}`
-      })
+    events = {
+        async search(q) {
+            this.search = q
+            await this.addUsers(true)
+        }
     }
-  }
 
-  async addUsers(type) {
-    const result = await services.searchUsers(this.search, this.pageNo)
-    if (result.statusCode === 200) {
-      const {
-        data: {
-          total_count: totalCount,
-          items = []
+    methods = {
+        async load() {
+            await this.addUsers()
+        },
+        watchUser(url) {
+            wepy.navigateTo({
+                url: `./userDetail?url=${url}`
+            })
         }
-      } = result
-      const data = items.map(current => ({
-        avatarUrl: current.avatar_url,
-        name: current.login,
-        url: current.url
-      }))
-
-      if (type) {
-        if (data.length === 20) {
-          this.userDataSource = data
-          this.temporaryUsers = []
-          this.pageNo++
-        } else {
-          this.temporaryUsers = data
-          this.userDataSource = []
-        }
-      } else {
-        if (data.length === 20) {
-          this.userDataSource.push(...data)
-          this.temporaryUsers = []
-          this.pageNo++
-        } else {
-          this.temporaryUsers = data
-        }
-      }
-
-      this.listData = this.userDataSource.concat(this.temporaryUsers)
-      this.$emit('updateTotal', `(${totalCount})`, 1)
-      this.$apply()
     }
-  }
+
+    async addUsers(type) {
+        const result = await services.searchUsers(this.search, this.pageNo)
+        if (result.statusCode === 200) {
+            const {
+                data: {
+                total_count: totalCount,
+                items = []
+                }
+            } = result
+            const data = items.map(current => ({
+                avatarUrl: current.avatar_url,
+                name: current.login,
+                url: current.url
+            }))
+
+            if (type) {
+                if (data.length === 20) {
+                    this.userDataSource = data
+                    this.temporaryUsers = []
+                    this.pageNo++
+                } else {
+                    this.temporaryUsers = data
+                    this.userDataSource = []
+                }
+            } else {
+                if (data.length === 20) {
+                    this.userDataSource.push(...data)
+                    this.temporaryUsers = []
+                    this.pageNo++
+                } else {
+                    this.temporaryUsers = data
+                }
+            }
+
+            this.listData = this.userDataSource.concat(this.temporaryUsers)
+            this.$emit('updateTotal', `(${totalCount})`, 1)
+            this.$apply()
+        }
+    }
 }
 </script>
 

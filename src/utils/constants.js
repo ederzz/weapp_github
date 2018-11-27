@@ -15,3 +15,9 @@ export const monthMap = [
   'Nov',
   'Dec'
 ]
+
+export const githubEventMap = {
+  WatchEvent: 'starred',
+  ForkEvent: 'forked',
+  CreateEvent: 'created a repository'
+}

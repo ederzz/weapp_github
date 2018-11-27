@@ -1,0 +1,39 @@
+<template>
+    <view class="header">
+        <view class="app-name">{{ title }}</view>
+        <view @tap="go2search" class="search-entry">search</view></view>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class FeedsHeader extends wepy.component {
+    props = {
+        title: String
+    }
+    methods = {
+        go2search() {
+            this.$navigate({
+                url: '../pages/search'
+            })
+        }
+    }
+}
+</script>
+
+<style lang='less'>
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 40rpx;
+        box-shadow: 2rpx 0 20rpx 0 rgba(0, 0, 0, 0.2);
+        height: 100rpx;
+
+        .app-name {
+            font-size: 28rpx;
+            font-weight: 500;
+        }
+    }
+</style>

@@ -63,3 +63,8 @@ export const searchIssues = (q, no, order = '') => request(`/search/issues?q=${q
  * @param {String}} order 排序关键字
  */
 export const searchCodes = (q, no, order = '') => request(`/search/code?q=${q}&sort=&order=${order}&page=${no}&per_page=20`)
+
+/**
+ * 用户timeline
+ */
+export const getUserTimeline = no => request(`/users/shenyiling/received_events?page=${no}`)

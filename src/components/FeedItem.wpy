@@ -1,0 +1,79 @@
+<template>
+    <view class="feed-item">
+        <view class="left">
+            <image src="{{ info.userAvatar }}" />
+        </view>
+        <view class="right">
+            <view class="event">
+                {{ info.userName }}
+                <text style="font-weight: 500;">{{ info.event }}</text>
+                {{ info.repo.name }}
+            </view>
+            <view class="occur-time">
+                <image src="{{ markImg[info.event] }}" />
+                {{ info.occurTime }}
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class FeedItem extends wepy.component {
+    config = {
+        navigationBarTitleText: ''
+    }
+
+    data = {
+        markImg: {
+            starred: '../images/star.png',
+            forked: '../images/fork.png',
+            'created a repository': '../images/create.png'
+        }
+    }
+
+    props = {
+        info: Object
+    }
+}
+</script>
+
+<style lang='less'>
+    .feed-item {
+        display: flex;
+        padding: 0 40rpx;
+        margin-bottom: 40rpx;
+
+        .left {
+            margin-right: 40rpx;
+            font-size: 0;
+
+            >image {
+                width: 100rpx;
+                height: 100rpx;
+                border-radius: 50%;
+            }
+        }
+
+        .right {
+            .occur-time {
+                font-size: 24rpx;
+                color: rgba(0, 0, 0, .5);
+                display: flex;
+                align-items: center;
+
+                >image {
+                    width: 28rpx;
+                    height: 28rpx;
+                    margin-right: 20rpx;
+                }
+            }
+
+            .event {
+                font-size: 30rpx;
+                margin-bottom: 10rpx;
+            }
+        }
+    }
+</style>

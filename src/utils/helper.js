@@ -175,7 +175,7 @@ export function formatMsgTime (time) {
     return Math.round((milliseconds / (1000 * 60))) + ' minutes ago'
   }
   else if (1000 * 60 * 60 * 1 < milliseconds && milliseconds <= 1000 * 60 * 60 * 24) {
-    return Math.round(milliseconds / (1000 * 60 * 60)) + ' hours age'
+    return Math.round(milliseconds / (1000 * 60 * 60)) + ' hours ago'
   }
   else if (1000 * 60 * 60 * 24 < milliseconds && milliseconds <= 1000 * 60 * 60 * 24 * 15) {
     return Math.round(milliseconds / (1000 * 60 * 60 * 24)) + ' days ago'

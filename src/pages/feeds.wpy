@@ -1,20 +1,108 @@
 <template>
-  <view>
-    这里是feeds
-    <view class="show">feeeds</view>
+  <view class="feeds">
+    <feeds_header :title.sync="title"></feeds_header>
+    <scroll-view
+        class="feeds-wrapper"
+        scroll-y 
+        scroll-with-animation 
+        @scrolltolower="loadMore">
+        <view class="black" style="width: 100%;height: 22rpx;"></view>
+        <repeat for="{{ timeline }}" key="index" index="index" item="item">
+            <feed_item :info.sync="item" />
+        </repeat>
+    </scroll-view> 
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
+import * as services from '@/utils/services'
+import FeedsHeader from '@/components/FeedsHeader'
+import FeedItem from '@/components/FeedItem'
+import {
+    githubEventMap
+} from '@/utils/constants'
+import { formatMsgTime } from '@/utils/helper'
 
 export default class Feeds extends wepy.page {
     config = {
-        navigationBarTitleText: 'Feeds'
+        navigationBarTitleText: 'Feeds',
+        navigationBarBackgroundColor: '#eee'
+    }
+
+    components = {
+        feeds_header: FeedsHeader,
+        feed_item: FeedItem
+    }
+
+    data = {
+        timeline: [],
+        title: 'WepyGitHub',
+        page: 1
+    }
+
+    methods = {
+        async loadMore() {
+            wepy.showLoading({
+                title: 'Loading...',
+                mask: true
+            })
+            await this.fetchFeeds()
+            wepy.hideLoading()
+        }
+    }
+
+    async onLoad() {
+        this.fetchFeeds()
+    }
+
+    async fetchFeeds() {
+        const {
+            statusCode,
+            data = []
+        } = await services.getUserTimeline(this.page)
+        if (statusCode === 200) {
+            this.timeline = this.timeline.concat(this.formatterData(data))
+            this.page += 1
+            this.$apply()
+        }
+    }
+
+    formatterData(data) {
+        return data.map(current => {
+            const {
+                actor: {
+                    avatar_url,
+                    login
+                },
+                type,
+                payload,
+                created_at,
+                repo
+            } = current
+
+            return {
+                userName: login,
+                userAvatar: avatar_url,
+                event: githubEventMap[type],
+                occurTime: formatMsgTime(created_at),
+                repo
+            }
+        })
     }
 }
 </script>
 
 <style lang='less'>
-
+    .feeds {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+    }
+    .feeds-wrapper {
+        width: 750rpx;
+        height: calc(~'100% - 100rpx');
+    }
 </style>

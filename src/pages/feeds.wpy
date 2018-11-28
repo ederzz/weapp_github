@@ -10,6 +10,7 @@
         <repeat for="{{ timeline }}" key="index" index="index" item="item">
             <feed_item :info.sync="item" />
         </repeat>
+        <view style="text-align: center;" class="loading">loading...</view>
     </scroll-view> 
   </view>
 </template>
@@ -38,22 +39,23 @@ export default class Feeds extends wepy.page {
     data = {
         timeline: [],
         title: 'WepyGitHub',
-        page: 1
+        page: 1,
+        loading: false
     }
 
     methods = {
         async loadMore() {
-            wepy.showLoading({
-                title: 'Loading...',
-                mask: true
-            })
             await this.fetchFeeds()
-            wepy.hideLoading()
         }
     }
 
     async onLoad() {
+        if (this.loading) {
+            return null
+        }
+        this.loading = true
         this.fetchFeeds()
+        this.loading = false
     }
 
     async fetchFeeds() {
@@ -104,5 +106,10 @@ export default class Feeds extends wepy.page {
     .feeds-wrapper {
         width: 750rpx;
         height: calc(~'100% - 100rpx');
+
+        .loading {
+            font-size: 28rpx;
+            color: rgba(0, 0, 0, .7);
+        }
     }
 </style>

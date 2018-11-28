@@ -35,7 +35,7 @@ export default class FeedsHeader extends wepy.component {
 
         .app-name {
             font-size: 28rpx;
-            font-weight: 600;
+            font-weight: 800;
         }
 
         .search-entry {

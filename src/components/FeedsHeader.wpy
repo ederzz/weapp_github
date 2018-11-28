@@ -1,7 +1,9 @@
 <template>
     <view class="header">
         <view class="app-name">{{ title }}</view>
-        <view @tap="go2search" class="search-entry">search</view></view>
+        <view @tap="go2search" class="search-entry">
+            <image src="../images/search.png" />
+        </view>
     </view>
 </template>
 
@@ -14,7 +16,7 @@ export default class FeedsHeader extends wepy.component {
     }
     methods = {
         go2search() {
-            this.$navigate({
+            this.$parent.$navigate({
                 url: '../pages/search'
             })
         }
@@ -33,7 +35,14 @@ export default class FeedsHeader extends wepy.component {
 
         .app-name {
             font-size: 28rpx;
-            font-weight: 500;
+            font-weight: 600;
+        }
+
+        .search-entry {
+            >image {
+                width: 60rpx;
+                height: 60rpx;
+            }
         }
     }
 </style>

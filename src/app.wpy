@@ -36,14 +36,19 @@ export default class extends wepy.app {
             navigationBarTextStyle: 'black'
         },
         tabBar: {
+            selectedColor: '#2462ff',
             list: [
                 {
                     pagePath: 'pages/feeds',
-                    text: 'Feeds'
+                    text: 'Feeds',
+                    iconPath: './images/feeds.png',
+                    selectedIconPath: './images/feeds_active.png'
                 },
                 {
                     pagePath: 'pages/personalCenter',
-                    text: '个人中心'
+                    text: '个人中心',
+                    iconPath: './images/profile.png',
+                    selectedIconPath: './images/profile_active.png'
                 }
             ]
         }

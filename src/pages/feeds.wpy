@@ -59,7 +59,7 @@ export default class Feeds extends wepy.page {
             return null
         }
         this.loading = true
-        this.fetchFeeds()
+        await this.fetchFeeds()
         this.loading = false
     }
 

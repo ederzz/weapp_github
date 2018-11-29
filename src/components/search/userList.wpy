@@ -28,9 +28,8 @@ export default class UserList extends wepy.component {
     data = {
         search: '',
         pageNo: 1,
-        userDataSource: [],
-        temporaryUsers: [],
-        listData: []
+        listData: [],
+        loading: false
     }
 
     events = {
@@ -42,7 +41,12 @@ export default class UserList extends wepy.component {
 
     methods = {
         async load() {
+            if (this.loading) {
+                return null
+            }
+            this.loading = true
             await this.addUsers()
+            this.loading = false
         },
         watchUser(url) {
             wepy.navigateTo({
@@ -66,26 +70,9 @@ export default class UserList extends wepy.component {
                 url: current.url
             }))
 
-            if (type) {
-                if (data.length === 20) {
-                    this.userDataSource = data
-                    this.temporaryUsers = []
-                    this.pageNo++
-                } else {
-                    this.temporaryUsers = data
-                    this.userDataSource = []
-                }
-            } else {
-                if (data.length === 20) {
-                    this.userDataSource.push(...data)
-                    this.temporaryUsers = []
-                    this.pageNo++
-                } else {
-                    this.temporaryUsers = data
-                }
-            }
+            this.listData.push(...data)
+            this.pageNo++
 
-            this.listData = this.userDataSource.concat(this.temporaryUsers)
             this.$emit('updateTotal', `(${totalCount})`, 1)
             this.$apply()
         }

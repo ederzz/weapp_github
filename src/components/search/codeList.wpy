@@ -24,9 +24,8 @@ export default class CodeList extends wepy.component {
     data = {
         search: '',
         pageNo: 1,
-        codeDataSource: [],
-        temporaryCodes: [],
-        listData: []
+        listData: [],
+        loading: false
     }
 
     events = {
@@ -38,7 +37,12 @@ export default class CodeList extends wepy.component {
 
     methods = {
         async load() {
+            if (this.loading) {
+                return null
+            }
+            this.loading = true
             await this.addCodes()
+            this.loading = false
         },
         watchSourceCode(url) {
             wepy.navigateTo({
@@ -62,26 +66,9 @@ export default class CodeList extends wepy.component {
                 url: current.git_url
             }))
 
-            if (type) {
-                if (data.length === 20) {
-                    this.codeDataSource = data
-                    this.temporaryCodes = []
-                    this.pageNo++
-                } else {
-                    this.temporaryCodes = data
-                    this.codeDataSource = []
-                }
-            } else {
-                if (data.length === 20) {
-                    this.codeDataSource.push(...data)
-                    this.temporaryCodes = []
-                    this.pageNo++
-                } else {
-                    this.temporaryCodes = data
-                }
-            }
+            this.listData.push(...data)
+            this.pageNo++
 
-            this.listData = this.codeDataSource.concat(this.temporaryCodes)
             this.$emit('updateTotal', `(${totalCount})`, 3)
             this.$apply()
         }

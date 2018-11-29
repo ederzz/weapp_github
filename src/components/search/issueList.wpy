@@ -32,9 +32,8 @@ export default class IssueList extends wepy.component {
     data = {
         search: '',
         pageNo: 1,
-        issueDataSource: [],
-        temporaryIssues: [],
-        listData: []
+        listData: [],
+        loading: false
     }
 
     events = {
@@ -46,7 +45,12 @@ export default class IssueList extends wepy.component {
 
     methods = {
         async load() {
+            if (this.loading) {
+                return null
+            }
+            this.loading = true
             await this.addIssues()
+            this.loading = false
         }
     }
 
@@ -84,26 +88,9 @@ export default class IssueList extends wepy.component {
                 }
             })
 
-            if (type) {
-                if (data.length === 20) {
-                    this.issueDataSource = data
-                    this.temporaryIssues = []
-                    this.pageNo++
-                } else {
-                    this.temporaryIssues = data
-                    this.issueDataSource = []
-                }
-            } else {
-                if (data.length === 20) {
-                    this.issueDataSource.push(...data)
-                    this.temporaryIssues = []
-                    this.pageNo++
-                } else {
-                    this.temporaryIssues = data
-                }
-            }
+            this.listData.push(...data)
+            this.pageNo++
 
-            this.listData = this.issueDataSource.concat(this.temporaryIssues)
             this.$emit('updateTotal', `(${totalCount})`, 2)
             this.$apply()
         }

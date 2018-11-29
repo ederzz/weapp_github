@@ -26,7 +26,7 @@
               <image src="../../images/size.png" class="desc__img" />
               <view>{{ item.size }}</view>
             </view>
-            <view>{{ item.language || '' }}</view>
+            <view style="color: {{item.color}};">{{ item.language || '' }}</view>
           </view>
         </view>
       </view>
@@ -45,19 +45,24 @@
 import wepy from 'wepy'
 import { formatMsgTime } from '@/utils/helper'
 import * as services from '@/utils/services'
+import { githubColor } from '@/utils/constants'
 
 export default class RepositroyList extends wepy.component {
     data = {
         search: '',
         pageNo: 1,
-        repositoryDataSource: [],
-        temporaryRepositories: [],
-        listData: []
+        listData: [],
+        loading: false
     }
 
     methods = {
         async load() {
+            if (this.loading) {
+              return null
+            }
+            this.loading = true
             await this.addRepository()
+            this.loading = false
         }
     }
 
@@ -84,29 +89,13 @@ export default class RepositroyList extends wepy.component {
                 size: current.size,
                 language: current.language,
                 fullName: current.full_name,
-                avatarUrl: current.owner.avatar_url
+                avatarUrl: current.owner.avatar_url,
+                color: githubColor[current.language] ? githubColor[current.language].color : '#000'
             }))
 
-            if (type) {
-                if (data.length === 20) {
-                    this.repositoryDataSource = data
-                    this.temporaryRepositories = []
-                    this.pageNo++
-                } else {
-                    this.temporaryRepositories = data
-                    this.repositoryDataSource = []
-                }
-            } else {
-                if (data.length === 20) {
-                    this.repositoryDataSource.push(...data)
-                    this.temporaryRepositories = []
-                    this.pageNo++
-                } else {
-                    this.temporaryRepositories = data
-                }
-            }
+            this.listData.push(...data)
+            this.pageNo++
 
-            this.listData = this.repositoryDataSource.concat(this.temporaryRepositories)
             this.$emit('updateTotal', `(${totalCount})`, 0)
             this.$apply()
         }

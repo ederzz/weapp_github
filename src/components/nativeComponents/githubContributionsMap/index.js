@@ -1,6 +1,4 @@
 import * as echarts from '../../echarts/ec-canvas/echarts'
-import { daysFromNewYeays2theMonth } from '../../../utils/helper'
-const daysMap = daysFromNewYeays2theMonth()
 
 function getOptions(data) {
     if (!data || JSON.stringify(data) === '{}') {
@@ -22,10 +20,8 @@ function getOptions(data) {
             ])
         })
     })
-    console.log(seriesData, 22222)
 
     const options = {
-        // animation: false,
         // grid: {
         //     left: 0,
         //     right: 0,
@@ -39,7 +35,6 @@ function getOptions(data) {
             cellSize: [7],
             range: '2018',
             itemStyle: {
-                // normal: {borderWidth: 0.5},
                 borderWidth: 1,
                 borderColor: '#fff'
             },
@@ -81,7 +76,6 @@ Component({
             type: Object,
             value: {},
             observer(val) {
-                console.log(val, this, this.chart)
                 if (!this.chart && !this.ecComponent) {
                     return null
                 }

@@ -222,27 +222,3 @@ export const parseDateStr = str => {
  * 随机HSL颜色值
  */
 export const getRandomHSL = () => `hsl(${360 * Math.random()}, ${25 + 65 * Math.random()}%, ${65 + 25 * Math.random()}%)`
-
-/**
- * get days from first day of the year 2 this month
- */
-export const daysFromNewYeays2theMonth = () => {
-    const year = new Date().getFullYear()
-    return new Array(12).fill(1).reduce((obj, _, month) => {
-        if (month === 0) {
-            obj[month + 1] = 0
-        } else {
-            obj[month + 1] = getDays(year, month) + obj[month]
-        }
-        return obj
-    }, {})
-}
-
-/**
- * 获取当月天数
- * @param {Number} year 年
- * @param {Number} month 月
- */
-export const getDays = (year, month) => {
-    return new Date(year, month, 0).getDate()
-}

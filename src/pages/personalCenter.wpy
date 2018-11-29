@@ -1,12 +1,38 @@
 <template>
-  <view>
-    个人中心
-    <view style="width: 750rpx;height: 750rpx;">
-        <contributions 
-            contributions="{{contributions}}"
-            />
+<view class="contributions-wrapper">
+    <view class="header">
+        <image src="{{ userInfo.avatar_url }}" />
+        <view class="right">
+            <view class="name">
+                {{ userInfo.name }}
+                <text class="nickname">@{{ userInfo.login }}</text>
+            </view>
+            <view class="bio">{{ userInfo.bio }}</view>
+        </view>
     </view>
-  </view>
+    <view class="info">
+        <view class="follow">
+            <view class="following">FOLLOWING({{ userInfo.following }})</view>
+            <view class="line"></view>
+            <view class="followers">FOLLOWERS({{ userInfo.followers }})</view>
+        </view>
+        <view class="location">
+            <image src="../images/location.png" />
+            <view>{{ userInfo.location }}</view>
+        </view>
+        <view class="email">
+            <image src="../images/email.png" />
+            <view>{{ userInfo.email }}</view>
+        </view>
+        <view class="created">
+            <image src="../images/time.png" />
+            <view>{{ userInfo.created_at }}</view>
+        </view>
+    </view>
+    <contributions 
+        contributions="{{contributions}}"
+    />
+    </view>
 </template>
 
 <script>
@@ -22,10 +48,33 @@ export default class PersonalCenter extends wepy.page {
     }
 
     data = {
-      contributions: {}
+      contributions: {},
+      userInfo: {}
     }
 
     async onLoad() {
+        const {
+            login,
+            name,
+            avatar_url,
+            location,
+            bio,
+            followers,
+            following,
+            email,
+            created_at
+        } = wx.getStorageSync('userInfo')
+        this.userInfo = {
+            login,
+            name,
+            avatar_url,
+            location,
+            bio,
+            followers,
+            following,
+            created_at,
+            email
+        }
         const {
             statusCode,
             data
@@ -39,5 +88,76 @@ export default class PersonalCenter extends wepy.page {
 </script>
 
 <style lang='less'>
+    .contributions-wrapper {
+        .header {
+            display: flex;
+            padding: 0 40rpx;
 
+            >image {
+                width: 200rpx;
+                height: 200rpx;
+                border-radius: 8rpx;
+                margin-right: 20rpx;
+            }
+
+            .right {
+                padding-top: 10rpx;
+
+                .name {
+                    font-size: 44rpx;
+                    margin-bottom: 12rpx;
+
+                    >text {
+                        font-size: 32rpx;
+                        color: rgba(0, 0, 0, .8);
+                    }
+                }
+
+                .bio {
+                    font-size: 36rpx;
+                }
+            }
+        }
+
+        .info {
+            margin-top: 20rpx;
+
+            image {
+                width: 40rpx;
+                height: 40rpx;
+                margin-right: 40rpx;
+            }
+
+            >view {
+                padding: 40rpx 0;
+                margin: 0 40rpx;
+                border-bottom: 2rpx solid #c9c9c9;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+
+                &:last-child {
+                    border: none;
+                }
+
+                &.follow {
+                    justify-content: center;
+                    font-size: 34rpx;
+
+                    .line {
+                        width: 2rpx;
+                        height: 40rpx;
+                        background: #000;
+                        margin: 0 20rpx;
+                    }
+                }
+            }
+
+            .location {
+                >image {
+                    width: 50rpx;
+                }
+            }
+        }
+    }
 </style>

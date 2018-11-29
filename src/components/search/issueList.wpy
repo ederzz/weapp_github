@@ -13,6 +13,9 @@
         </view>
       </view>
     </repeat>
+    <view class="loading-wrapper">
+        <image style="display: block;margin: 0 auto;width: 80rpx;height: 80rpx;" src="../../images/loading.svg" />
+    </view>
   </scroll-view>
   <view class="empty__block" wx:if="{{ !listData.length }}">
     <view style="margin: 0 0 20rpx;">No search results</view>
@@ -77,7 +80,7 @@ export default class IssueList extends wepy.component {
                     state,
                     time,
                     location: filterUrl(url, '/repos/').replace('/issues/', '#'),
-                    icon: state === 'open' ? '../../images/openissue.png' : '../../images/closedissue.png'
+                    icon: state === 'open' ? '../images/openissue.png' : '../images/closedissue.png'
                 }
             })
 

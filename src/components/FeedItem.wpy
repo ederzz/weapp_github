@@ -1,7 +1,9 @@
 <template>
     <view class="feed-item">
         <view class="left">
-            <image style="background-color: {{ info.avatarBgColor }};" src="{{ info.userAvatar }}" />
+            <custom_image 
+                image-class="my__image" 
+                img-src="{{ info.userAvatar }}"></custom_image>
         </view>
         <view class="right">
             <view class="event">
@@ -49,7 +51,7 @@ export default class FeedItem extends wepy.component {
             margin-right: 40rpx;
             font-size: 0;
 
-            >image {
+            .my__image {
                 width: 100rpx;
                 height: 100rpx;
                 border-radius: 50%;

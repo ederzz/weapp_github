@@ -44,7 +44,10 @@ import CodeList from '@/components/search/codeList'
 
 export default class Search extends wepy.page {
     config = {
-        navigationBarTitleText: '搜索'
+        navigationBarTitleText: '搜索',
+        usingComponents: {
+            custom_image: '../components/nativeComponents/LazyLoadImage/index'
+        }
     }
 
     components = {

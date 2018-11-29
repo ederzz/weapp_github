@@ -3,7 +3,9 @@
     <repeat for="{{ listData }}" key="index" index="index" item="item">
       <view class="repository">
         <view class="avatar__wrapper">
-          <image src="{{ item.avatarUrl }}" class="author__avatar" />
+          <custom_image 
+                image-class="author__avatar" 
+                img-src="{{ item.avatarUrl }}"></custom_image>
         </view>
         <view class="info">
           <view class="name">{{ item.fullName }}</view>
@@ -29,6 +31,9 @@
         </view>
       </view>
     </repeat>
+    <view class="loading-wrapper">
+        <image style="display: block;margin: 0 auto;width: 80rpx;height: 80rpx;" src="../../images/loading.svg" />
+    </view>
   </scroll-view>
   <view class="empty__block" wx:if="{{ !listData.length }}">
     <view style="margin: 0 0 20rpx;">No search results</view>

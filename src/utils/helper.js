@@ -144,7 +144,7 @@ export const request = async (url, options = {}) => {
       'Authorization': `Basic ${accountInfo}`
     }
   }
-  console.log(options, 22)
+  
   if (options.baseUrl) {
     requestUrl = `${options.baseUrl}${url}` 
   } else {

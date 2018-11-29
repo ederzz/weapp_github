@@ -2,6 +2,7 @@
     <view class="feed-item">
         <view class="left">
             <custom_image 
+                @tap="go2userDetail({{info.userName}})"
                 image-class="my__image" 
                 img-src="{{ info.userAvatar }}"></custom_image>
         </view>
@@ -32,6 +33,17 @@ export default class FeedItem extends wepy.component {
             starred: '../images/star.png',
             forked: '../images/fork.png',
             'created a repository': '../images/create.png'
+        }
+    }
+
+    methods = {
+        go2userDetail(name) {
+            if (!name) {
+                return null
+            }
+            this.$parent.$navigate({
+                url: `../pages/userDetail?name=${name}`
+            })
         }
     }
 

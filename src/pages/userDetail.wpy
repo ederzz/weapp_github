@@ -53,15 +53,18 @@ export default class UserDetail extends wepy.page {
 
     async onLoad(options) {
         const {
-            url = ''
+            name = ''
         } = options
-        if (!url || !filterUrl(url)) {
+        if (!name) {
             return null
         }
-        const result = await request(filterUrl(url))
-        if (result.statusCode === 200) {
-            this.userInfo = result.data
-            this.getContributes(result.data.login)
+        const {
+            statusCode,
+            data
+        } = await services.getUser(name)
+        if (statusCode === 200) {
+            this.userInfo = data
+            this.getContributes(data.login)
             this.$apply()
         }
     }
@@ -111,7 +114,7 @@ export default class UserDetail extends wepy.page {
 
           .name {
             color: @font_color;
-            font-size: 36rpx;
+            font-size: 32rpx;
           }
 
           .nick__name {
@@ -146,7 +149,7 @@ export default class UserDetail extends wepy.page {
         .followers {
           flex: 1;
           text-align: center;
-          font-size: 36rpx;
+          font-size: 32rpx;
           color: @font_color;
           padding: 40rpx 0;
         }

@@ -1,7 +1,7 @@
 <template>
   <scroll-view @scrolltolower="load" scroll-y wx:if="{{ listData.length }}" class="data__wrapper">
     <repeat for="{{ listData }}" key="index" index="index" item="item">
-      <view class="user" @tap="watchUser({{ item.url }})">
+      <view class="user" @tap="watchUser({{ item.name }})">
         <view class="avatar__wrapper">
           <custom_image 
                 image-class="avatar__img" 
@@ -48,9 +48,9 @@ export default class UserList extends wepy.component {
             await this.addUsers()
             this.loading = false
         },
-        watchUser(url) {
+        watchUser(name) {
             wepy.navigateTo({
-                url: `./userDetail?url=${url}`
+                url: `./userDetail?name=${name}`
             })
         }
     }

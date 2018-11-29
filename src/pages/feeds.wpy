@@ -45,7 +45,8 @@ export default class Feeds extends wepy.page {
         timeline: [],
         title: 'WepyGitHub',
         page: 1,
-        loading: false
+        loading: false,
+        loginUser: ''
     }
 
     methods = {
@@ -55,6 +56,7 @@ export default class Feeds extends wepy.page {
     }
 
     async onLoad() {
+        this.loginUser = wx.getStorageSync('userInfo').login
         if (this.loading) {
             return null
         }
@@ -67,7 +69,7 @@ export default class Feeds extends wepy.page {
         const {
             statusCode,
             data = []
-        } = await services.getUserTimeline(this.page)
+        } = await services.getUserTimeline(this.page, this.loginUser)
         if (statusCode === 200) {
             this.timeline = this.timeline.concat(this.formatterData(data))
             this.page += 1

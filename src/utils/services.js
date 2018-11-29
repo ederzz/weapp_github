@@ -67,7 +67,7 @@ export const searchCodes = (q, no, order = '') => request(`/search/code?q=${q}&s
 /**
  * 用户timeline
  */
-export const getUserTimeline = no => request(`/users/shenyiling/received_events?page=${no}`)
+export const getUserTimeline = (no, user) => request(`/users/${user}/received_events?page=${no}`)
 
 /**
  * get login user github contributions
@@ -75,3 +75,9 @@ export const getUserTimeline = no => request(`/users/shenyiling/received_events?
 export const getLoginUserContributions = (user) => request(`/oauth/${user}/count`, {
   baseUrl: 'http://101.132.180.254:3002'
 })
+
+/**
+ * 根据用户名查找用户
+ * @param {String} name 用户名
+ */
+export const getUser = name => request(`/users/${name}`)

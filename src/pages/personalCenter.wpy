@@ -29,7 +29,7 @@
             <view>{{ userInfo.created_at }}</view>
         </view>
     </view>
-    <contributions 
+    <contributions_heatmap 
         contributions="{{contributions}}"
     />
     </view>
@@ -43,7 +43,7 @@ export default class PersonalCenter extends wepy.page {
     config = {
         navigationBarTitleText: '个人中心',
         usingComponents: {
-            contributions: '../components/nativeComponents/githubContributionsMap/index'
+            contributions_heatmap: '../components/nativeComponents/githubContributionsMap/index'
         }
     }
 
@@ -78,7 +78,7 @@ export default class PersonalCenter extends wepy.page {
         const {
             statusCode,
             data
-        } = await services.getLoginUserContributions()
+        } = await services.getLoginUserContributions(login)
         if (statusCode === 200) {
             this.contributions = data[new Date().getFullYear()]
             this.$apply()

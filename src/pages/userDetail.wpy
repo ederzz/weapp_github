@@ -29,20 +29,26 @@
         <view class="create__info">{{ userInfo.created_at }}</view>
       </view>
     </view>
+    <contributions_heatmap contributions="{{ contributions }}" />
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
 import { filterUrl, request } from '@/utils/helper'
+import * as services from '@/utils/services'
 
 export default class UserDetail extends wepy.page {
     config = {
-        navigationBarTitleText: 'user'
+        navigationBarTitleText: 'user',
+        usingComponents: {
+            contributions_heatmap: '../components/nativeComponents/githubContributionsMap/index'
+        }
     }
 
     data = {
-        userInfo: {}
+        userInfo: {},
+        contributions: {}
     }
 
     async onLoad(options) {
@@ -55,6 +61,18 @@ export default class UserDetail extends wepy.page {
         const result = await request(filterUrl(url))
         if (result.statusCode === 200) {
             this.userInfo = result.data
+            this.getContributes(result.data.login)
+            this.$apply()
+        }
+    }
+
+    async getContributes(login) {
+        const {
+            statusCode,
+            data
+        } = await services.getLoginUserContributions(login)
+        if (statusCode === 200) {
+            this.contributions = data[new Date().getFullYear()]
             this.$apply()
         }
     }

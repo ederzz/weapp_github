@@ -68,3 +68,10 @@ export const searchCodes = (q, no, order = '') => request(`/search/code?q=${q}&s
  * 用户timeline
  */
 export const getUserTimeline = no => request(`/users/shenyiling/received_events?page=${no}`)
+
+/**
+ * get login user github contributions
+ */
+export const getLoginUserContributions = () => request(`/oauth/shenyiling/count`, {
+  baseUrl: 'http://101.132.180.254:3002'
+})

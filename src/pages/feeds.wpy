@@ -23,7 +23,7 @@ import FeedItem from '@/components/FeedItem'
 import {
     githubEventMap
 } from '@/utils/constants'
-import { formatMsgTime } from '@/utils/helper'
+import { formatMsgTime, getRandomHSL } from '@/utils/helper'
 
 export default class Feeds extends wepy.page {
     config = {
@@ -78,7 +78,7 @@ export default class Feeds extends wepy.page {
                     login
                 },
                 type,
-                payload,
+                // payload,
                 created_at,
                 repo
             } = current
@@ -88,7 +88,8 @@ export default class Feeds extends wepy.page {
                 userAvatar: avatar_url,
                 event: githubEventMap[type],
                 occurTime: formatMsgTime(created_at),
-                repo
+                repo,
+                avatarBgColor: getRandomHSL()
             }
         })
     }

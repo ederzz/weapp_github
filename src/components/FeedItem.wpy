@@ -1,7 +1,7 @@
 <template>
     <view class="feed-item">
         <view class="left">
-            <image src="{{ info.userAvatar }}" />
+            <image style="background-color: {{ info.avatarBgColor }};" src="{{ info.userAvatar }}" />
         </view>
         <view class="right">
             <view class="event">

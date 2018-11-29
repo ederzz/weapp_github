@@ -16,6 +16,9 @@ export const monthMap = [
   'Dec'
 ]
 
+/**
+ * github feed event type
+ */
 export const githubEventMap = {
   WatchEvent: 'starred',
   ForkEvent: 'forked',

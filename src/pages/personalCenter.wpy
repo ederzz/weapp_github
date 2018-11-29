@@ -1,15 +1,39 @@
 <template>
   <view>
     个人中心
+    <view style="width: 750rpx;height: 750rpx;">
+        <contributions 
+            contributions="{{contributions}}"
+            />
+    </view>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy'
+import * as services from '@/utils/services'
 
 export default class PersonalCenter extends wepy.page {
     config = {
-        navigationBarTitleText: '个人中心'
+        navigationBarTitleText: '个人中心',
+        usingComponents: {
+            contributions: '../components/nativeComponents/githubContributionsMap/index'
+        }
+    }
+
+    data = {
+      contributions: {}
+    }
+
+    async onLoad() {
+        const {
+            statusCode,
+            data
+        } = await services.getLoginUserContributions()
+        if (statusCode === 200) {
+            this.contributions = data[new Date().getFullYear()]
+            this.$apply()
+        }
     }
 }
 </script>

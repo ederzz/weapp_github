@@ -1,0 +1,3 @@
+<view class="contributes">
+    <ec-canvas id="mychart-dom-area" id="contributions-chart" canvas-id="contributions-chart" ec="{{ ec }}"></ec-canvas>
+</view>

@@ -122,7 +122,7 @@
 	word-wrap:break-word;
 }
 .wemark_inline_image{
-	width:100%;
+	width: 200rpx;
 	height:auto;
 }
 .wemark_inline_code{

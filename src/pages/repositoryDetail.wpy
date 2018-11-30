@@ -55,4 +55,7 @@ export default class Repository extends wepy.page {
     .readme-wrapper {
         padding: 0 20rpx;
     }
+    .wemark_inline_image {
+        width:300rpx!important;
+    }
 </style>

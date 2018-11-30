@@ -25,7 +25,6 @@ export default class extends wepy.app {
             'pages/login',
             'pages/feeds',
             'pages/search',
-            'pages/index',
             'pages/codeDetail',
             'pages/repositoryDetail',
             'pages/userDetail'

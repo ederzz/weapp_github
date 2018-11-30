@@ -1,15 +1,41 @@
 <template>
     <view>
+        <view @tap="showDescPanel" class="header">
+            <image @tap="showDescPanel" class="desc-btn" src="../images/info.png" />
+            <view class="info">
+                <image src="{{ avatarUrl }}" />
+                <view class="right">
+                    <view class="name">{{ info.full_name }}</view>
+                    <view class="size">
+                        <text wx:if="{{ info.updateTime }}">{{ info.updateTime }}，</text>
+                        <text style="margin-right: 20rpx;">{{ info.size }} MB</text>
+                        <text style="color: {{ info.bgColor }};">{{ info.language }}</text>
+                    </view>
+                </view>
+            </view>
+            <view class="tags">
+                <repeat for="{{ tags }}" key="index" index="index" item="item">
+                    <view class="tag">{{ item }}</view>
+                </repeat>
+            </view>
+        </view>
         <view class="readme-wrapper">
             <wemark md="{{md}}" link highlight type="wemark"></wemark>
         </view>
+        <repo_desc
+            :show.sync="showDesc"
+            :desc.sync="repoDescription"
+            :name.sync="repoName"
+         />
     </view>
 </template>
 
 <script>
 import wepy from 'wepy'
 import * as services from '@/utils/services'
-import { Base64 } from '@/utils/helper'
+import { Base64, formatMsgTime } from '@/utils/helper'
+import { githubColor } from '@/utils/constants'
+import RepoDesc from '@/components/RepoDesc'
 
 export default class Repository extends wepy.page {
     config = {
@@ -19,43 +45,145 @@ export default class Repository extends wepy.page {
         }
     }
 
+    components = {
+        repo_desc: RepoDesc
+    }
+
     data = {
-        md: ''
+        avatarUrl: '',
+        md: '',
+        info: {},
+        tags: [],
+        showDesc: true,
+        repoDescription: 'woshicontent',
+        repoName: ''
+    }
+
+    methods = {
+        showDescPanel() {
+            this.showDesc = true
+            console.log(this.showDesc)
+        }
     }
 
     async onLoad(options) {
         const {
-            repo_path
+            repo_path,
+            avatar
         } = options
         
-        // const {
-        //     statusCode,
-        //     data
-        // } = await services.getRepository(repo_path)
-        // if (statusCode === 200) {
-        //     const {
-        //         forks,
-        //         full_name,
-        //         language,
-        //         stargazers_count,
-        //         subscribers_count,
-        //         description,
-        //     } = data
-        // }
-        
+        this.avatarUrl = avatar
+        this.repoName = repo_path.slice(1)
+        this.fetchRepoInfo(repo_path) 
+        this.fetchTags(repo_path)
+
         const result = await services.getRepositoryReadme(repo_path)
         const mdStr = Base64.decode(result.data.content)
         this.md = mdStr
         this.$apply()
     }
+
+    async fetchRepoInfo(repoPath) {
+        const {
+            statusCode,
+            data
+        } = await services.getRepository(repoPath)
+        if (statusCode === 200) {
+            const {
+                forks,
+                full_name,
+                language,
+                stargazers_count,
+                subscribers_count,
+                description,
+                size,
+                updated_at
+            } = data
+
+            this.info = {
+                forks,
+                full_name,
+                language,
+                stargazers_count,
+                subscribers_count,
+                description,
+                size: Math.ceil(size / 1024),
+                updateTime: formatMsgTime(updated_at),
+                bgColor: githubColor[language].color
+            }
+            this.$apply()
+        }
+    }
+
+    async fetchTags(path) {
+        const {
+            statusCode,
+            data
+        } = await services.getRepoTopics(path)
+        if (statusCode === 200) {
+            this.tags = data.names
+            this.$apply()
+        }
+    }
 }
 </script>
 
 <style lang='less'>
-    .readme-wrapper {
-        padding: 0 20rpx;
+    .header {
+        padding: 20rpx 40rpx;
+        background: #f5f5f5;
+        box-shadow: 0 2rpx 10rpx 0 #bbb;
+        position: relative;
+
+        .desc-btn {
+            position: absolute;
+            right:40rpx;
+            top: 40rpx;
+            width: 50rpx;
+            height: 50rpx;
+        }
+
+        .info {
+            display: flex;
+
+            >image {
+                width: 120rpx;
+                height: 120rpx;
+                border-radius: 50%;
+                margin-right: 40rpx;
+            }
+
+            .right {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+
+                .name {
+                    font-size: 40rpx;
+                }
+
+                .size {
+                    font-size: 24rpx;
+                }
+            }
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 20rpx;
+
+            .tag {
+                margin-right: 10rpx;
+                margin-bottom: 10rpx;
+                background: #fff;
+                font-size: 24rpx;
+                color: rgb(32, 115, 240);
+                padding: 10rpx 15rpx;
+            }
+        }
     }
-    .wemark_inline_image {
-        width:300rpx!important;
+    .readme-wrapper {
+        padding: 20rpx;
     }
 </style>

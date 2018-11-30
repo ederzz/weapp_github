@@ -137,12 +137,12 @@ export const request = async (url, options = {}) => {
   }
 
   const accountInfo = wx.getStorageSync('base64Account')
-  let headers = {}
+  let headers = {
+      ...options.headers
+  }
   let requestUrl
   if (accountInfo) {
-    headers = {
-      'Authorization': `Basic ${accountInfo}`
-    }
+    headers['Authorization'] = `Basic ${accountInfo}`
   }
   
   if (options.baseUrl) {

@@ -4,7 +4,7 @@
       <view class="repository">
         <view class="avatar__wrapper">
           <custom_image 
-              @tap="go2detail({{ item.url }})"
+              @tap="go2detail({{ item.url }}, {{ item.avatarUrl }})"
               image-class="author__avatar" 
               img-src="{{ item.avatarUrl }}"></custom_image>
         </view>
@@ -63,14 +63,14 @@ export default class RepositroyList extends wepy.component {
             }
             await this.addRepository()
         },
-        go2detail(url) {
+        go2detail(url, avatar) {
             if (!url) {
                 return null
             }
             const urlReg = /^https:\/\/api.github.com\/repos(.*)$/
             const repoPath = urlReg.exec(url)[1]
             this.$parent.$navigate({
-                url: `/pages/repositoryDetail?repo_path=${repoPath}`
+                url: `/pages/repositoryDetail?repo_path=${repoPath}&avatar=${avatar}`
             })
         }
     }

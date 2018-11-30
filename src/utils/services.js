@@ -93,3 +93,13 @@ export const getRepository = path => request(`/repos${path}`)
  * @param {String} path 
  */
 export const getRepositoryReadme = path => request(`/repos${path}/readme`)
+
+/**
+ * fetch one repo tags
+ * @param {String} path 
+ */
+export const getRepoTopics = path => request(`/repos${path}/topics`, {
+  headers: {
+    Accept: 'application/vnd.github.mercy-preview+json'
+  }
+})

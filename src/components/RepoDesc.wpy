@@ -1,0 +1,106 @@
+<template>
+    <view @tap="close" class="mask {{ show ? 'show' : 'hide' }}"></view>
+    <view class="desc {{ show ? 'show' : 'hide' }}">
+        <view class="name">{{ name }}</view>
+        <view class="content">{{ desc }}</view>
+        <view @tap="close" class="confirm-btn">确定</view>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class RepoDesc extends wepy.component {
+    props = {
+        name: String,
+        desc: String,
+        show: {
+            type: Boolean,
+            twoWay: true
+        }
+    }
+
+    methods = {
+        close() {
+            this.show = false
+        }
+    }
+}
+</script>
+
+<style lang='less'>
+    @keyframes descShow {
+        0% {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    @keyframes descHide {
+        0% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(100%);
+            opacity: 0;
+            z-index: -1;
+        }
+    }
+    .mask {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 999;
+        background: rgba(0, 0, 0, .3);
+
+        &.show {
+            background: rgba(0, 0, 0, .3);
+        }
+
+        &.hide {
+            z-index: -1;
+            background: transparent;
+        }
+    }
+
+    .desc {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff; 
+        display: inline-block;
+        z-index: 1000;
+        padding: 40rpx;
+
+        &.show {
+            opacity: 1;
+            bottom: 0;
+            animation: descShow .1s ease-in forwards;
+        }
+
+        &.hide {
+            animation: descHide .1s ease-in forwards;
+        }
+
+        .name {
+            margin-bottom: 30rpx;
+        }
+
+        .content {
+            color: rgba(0, 0, 0, .7);
+        }
+
+        .confirm-btn {
+            color: rgb(47, 60, 243);
+            display: inline-block;
+            float: right;
+        }
+    }
+</style>

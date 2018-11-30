@@ -13,7 +13,7 @@
         </view>
       </view>
     </repeat>
-    <view class="loading-wrapper">
+    <view wx:if="{{ loading }}" class="loading-wrapper">
         <image style="display: block;margin: 0 auto;width: 80rpx;height: 80rpx;" src="../../images/loading.svg" />
     </view>
   </scroll-view>
@@ -39,6 +39,7 @@ export default class IssueList extends wepy.component {
     events = {
         async search(q) {
             this.search = q
+            this.pageNo = 1
             await this.addIssues(true)
         }
     }
@@ -48,13 +49,12 @@ export default class IssueList extends wepy.component {
             if (this.loading) {
                 return null
             }
-            this.loading = true
             await this.addIssues()
-            this.loading = false
         }
     }
 
     async addIssues(type) {
+        this.loading = true
         const result = await services.searchIssues(this.search, this.pageNo)
         if (result.statusCode === 200) {
             const {
@@ -87,13 +87,17 @@ export default class IssueList extends wepy.component {
                     icon: state === 'open' ? '../images/openissue.png' : '../images/closedissue.png'
                 }
             })
-
-            this.listData.push(...data)
+            if (type) {
+                this.listData = data
+            } else {
+                this.listData.push(...data)
+            }
             this.pageNo++
 
             this.$emit('updateTotal', `(${totalCount})`, 2)
-            this.$apply()
         }
+        this.loading = false
+        this.$apply()
     }
 }
 </script>

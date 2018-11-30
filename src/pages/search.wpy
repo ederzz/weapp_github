@@ -1,38 +1,44 @@
 <template>
-  <view class="search__page">
-    <form @submit="onSeach">
-      <view class="search__bar">
-        <input @focus="searchFocus" @blur="searchBlur" name="search" placeholder-class="search__ph" placeholder="Search" class="search__input {{ inputFocus ? 'focus' : '' }}" />
-        <button form-type="submit" class="search__btn">
-          <image class="search__img" src="../images/search.png" />
-        </button>
-      </view>
-    </form>
-    <view class="tabs__wrapper">
-      <view class="white__block"></view>
-      <scroll-view scroll-left="{{ scrollLeft }}" class="shadow__box" scroll-x>
-        <view class="tabs">
-          <repeat for="{{ tabs }}" key="index" index="index" item="item">
-            <view @tap="switchTab({{ index }})" class="tabs__item {{ tabIndex === index ? 'active' : '' }}">{{ item }}{{ total[index] }}</view>
-          </repeat>
+    <view class="search__page">
+        <form @submit="handleSearch">
+            <view class="search__bar">
+                <input 
+                    @focus="searchFocus" 
+                    @blur="searchBlur" 
+                    name="search" 
+                    placeholder-class="search__ph" 
+                    placeholder="Search" 
+                    class="search__input {{ inputFocus ? 'focus' : '' }}" />
+                <button form-type="submit" class="search__btn">
+                    <image class="search__img" src="../images/search.png" />
+                </button>
+            </view>
+        </form>
+        <view class="tabs__wrapper">
+            <view class="white__block"></view>
+            <scroll-view scroll-left="{{ scrollLeft }}" class="shadow__box" scroll-x>
+                <view class="tabs">
+                    <repeat for="{{ tabs }}" key="index" index="index" item="item">
+                        <view @tap="switchTab({{ index }})" class="tabs__item {{ tabIndex === index ? 'active' : '' }}">{{ item }}{{ total[index] }}</view>
+                    </repeat>
+                </view>
+            </scroll-view>
         </view>
-      </scroll-view>
+        <swiper class="data__container" current="{{tabIndex}}" @change="onChange">
+            <swiper-item class="swiper__item">
+                <repository_list></repository_list>
+            </swiper-item>
+            <swiper-item class="swiper__item">
+                <user_list></user_list>
+            </swiper-item>
+            <swiper-item class="swiper__item">
+                <issue_list></issue_list>
+            </swiper-item>
+            <swiper-item class="swiper__item">
+                <code_list></code_list>
+            </swiper-item>
+        </swiper>
     </view>
-    <swiper class="data__container" current="{{tabIndex}}" @change="onChange">
-        <swiper-item class="swiper__item">
-          <repository_list></repository_list>
-        </swiper-item>
-        <swiper-item class="swiper__item">
-          <user_list></user_list>
-        </swiper-item>
-        <swiper-item class="swiper__item">
-          <issue_list></issue_list>
-        </swiper-item>
-        <swiper-item class="swiper__item">
-          <code_list></code_list>
-        </swiper-item>
-    </swiper>
-  </view>
 </template>
 
 <script>
@@ -102,7 +108,7 @@ export default class Search extends wepy.page {
                 this.inputFocus = false
             }
         },
-        async onSeach(e) {
+        async handleSearch(e) {
             const {
                 detail: {
                     value: {

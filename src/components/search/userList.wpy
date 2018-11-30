@@ -10,7 +10,7 @@
         <view class="username">{{ item.name }}</view>
       </view>
     </repeat>
-    <view class="loading-wrapper">
+    <view wx:if="{{ loading }}" class="loading-wrapper">
         <image style="display: block;margin: 0 auto;width: 80rpx;height: 80rpx;" src="../../images/loading.svg" />
     </view>
   </scroll-view>
@@ -35,6 +35,7 @@ export default class UserList extends wepy.component {
     events = {
         async search(q) {
             this.search = q
+            this.pageNo = 1
             await this.addUsers(true)
         }
     }
@@ -44,9 +45,7 @@ export default class UserList extends wepy.component {
             if (this.loading) {
                 return null
             }
-            this.loading = true
             await this.addUsers()
-            this.loading = false
         },
         watchUser(name) {
             wepy.navigateTo({
@@ -56,6 +55,7 @@ export default class UserList extends wepy.component {
     }
 
     async addUsers(type) {
+        this.loading = true
         const result = await services.searchUsers(this.search, this.pageNo)
         if (result.statusCode === 200) {
             const {
@@ -69,13 +69,17 @@ export default class UserList extends wepy.component {
                 name: current.login,
                 url: current.url
             }))
-
-            this.listData.push(...data)
+            if (type) {
+                this.listData = data
+            } else {
+                this.listData.push(...data)
+            }
             this.pageNo++
 
             this.$emit('updateTotal', `(${totalCount})`, 1)
-            this.$apply()
         }
+        this.loading = false
+        this.$apply()
     }
 }
 </script>

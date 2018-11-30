@@ -20,7 +20,7 @@ Component({
     },
     data: {
         show: false,
-        bgColor: 'red'
+        bgColor: ''
     },
     ready() {
         this.setData({

@@ -21,12 +21,13 @@ import 'wepy-async-function'
 export default class extends wepy.app {
     config = {
         pages: [
-            'pages/feeds',
             'pages/personalCenter',
-            'pages/search',
             'pages/login',
+            'pages/feeds',
+            'pages/search',
             'pages/index',
             'pages/codeDetail',
+            'pages/repositoryDetail',
             'pages/userDetail'
         ],
         window: {
@@ -67,7 +68,7 @@ export default class extends wepy.app {
     async onLaunch() {
         this.testAsync()
 
-        if (!wx.getStorageSync('userInfo')) {
+        if (!wepy.getStorageSync('userInfo')) {
             wepy.redirectTo({ url: 'pages/login' })
         }
     }

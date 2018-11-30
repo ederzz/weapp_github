@@ -38,6 +38,7 @@
 <script>
 import wepy from 'wepy'
 import * as services from '@/utils/services'
+import { Base64 } from '@/utils/helper'
 
 export default class PersonalCenter extends wepy.page {
     config = {
@@ -83,7 +84,7 @@ export default class PersonalCenter extends wepy.page {
             this.contributions = data[new Date().getFullYear()]
             this.$apply()
         }
-    }
+   }
 }
 </script>
 

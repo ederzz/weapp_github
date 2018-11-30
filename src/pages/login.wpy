@@ -75,6 +75,14 @@ export default class Login extends wepy.page {
             }
         }
     }
+
+    onLoad() {
+        if (wx.getStorageSync('base64Account')) {
+            this.$switch({
+                url: './feeds'
+            })
+        }
+    }
 }
 </script>
 

@@ -6,7 +6,7 @@
         <view class="file__name">{{ item.fileName }}</view>
       </view>
     </repeat>
-    <view class="loading-wrapper">
+    <view wx:if="{{ loading }}" class="loading-wrapper">
         <image style="display: block;margin: 0 auto;width: 80rpx;height: 80rpx;" src="../../images/loading.svg" />
     </view>
   </scroll-view>
@@ -31,6 +31,7 @@ export default class CodeList extends wepy.component {
     events = {
         async search(q) {
             this.search = q
+            this.pageNo = 1
             await this.addCodes(true)
         }
     }
@@ -40,9 +41,7 @@ export default class CodeList extends wepy.component {
             if (this.loading) {
                 return null
             }
-            this.loading = true
             await this.addCodes()
-            this.loading = false
         },
         watchSourceCode(url) {
             wepy.navigateTo({
@@ -52,6 +51,7 @@ export default class CodeList extends wepy.component {
     }
 
     async addCodes(type) {
+        this.loading = true
         const result = await services.searchCodes(this.search, this.pageNo)
         if (result.statusCode === 200) {
             const {
@@ -65,13 +65,17 @@ export default class CodeList extends wepy.component {
                 fileName: current.name,
                 url: current.git_url
             }))
-
-            this.listData.push(...data)
+            if (type) {
+                this.listData = data
+            } else {
+                this.listData.push(...data)
+            }
             this.pageNo++
 
             this.$emit('updateTotal', `(${totalCount})`, 3)
-            this.$apply()
         }
+        this.loading = false
+        this.$apply()
     }
 }
 </script>

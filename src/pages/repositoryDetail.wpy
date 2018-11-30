@@ -1,30 +1,58 @@
 <template>
-  <view>
-
-  </view>
+    <view>
+        <view class="readme-wrapper">
+            <wemark md="{{md}}" link highlight type="wemark"></wemark>
+        </view>
+    </view>
 </template>
 
 <script>
 import wepy from 'wepy'
+import * as services from '@/utils/services'
+import { Base64 } from '@/utils/helper'
 
 export default class Repository extends wepy.page {
     config = {
-        navigationBarTitleText: ''
+        navigationBarTitleText: 'repository',
+        usingComponents: {
+            wemark: '../components/nativeComponents/wemark/wemark'
+        }
     }
 
-    onLoad(options) {
-        const {} = options
-        const result = {}
-        if (result.success) {
-            const {
-                contents_url // 请求后筛选出readme内容
-            } = result
-            console.log(contents_url)
-        }
+    data = {
+        md: ''
+    }
+
+    async onLoad(options) {
+        const {
+            repo_path
+        } = options
+        
+        // const {
+        //     statusCode,
+        //     data
+        // } = await services.getRepository(repo_path)
+        // if (statusCode === 200) {
+        //     const {
+        //         forks,
+        //         full_name,
+        //         language,
+        //         stargazers_count,
+        //         subscribers_count,
+        //         description,
+        //     } = data
+        // }
+        
+        const result = await services.getRepositoryReadme(repo_path)
+        const mdStr = Base64.decode(result.data.content)
+        this.md = mdStr
+        this.$apply()
     }
 }
 </script>
 
 <style lang='less'>
-
+    .readme-wrapper {
+        padding: 0 20rpx;
+    }
 </style>

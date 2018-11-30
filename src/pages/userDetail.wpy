@@ -35,7 +35,7 @@
 
 <script>
 import wepy from 'wepy'
-import { filterUrl, request } from '@/utils/helper'
+// import { filterUrl, request } from '@/utils/helper'
 import * as services from '@/utils/services'
 
 export default class UserDetail extends wepy.page {

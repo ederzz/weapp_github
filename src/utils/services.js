@@ -81,3 +81,15 @@ export const getLoginUserContributions = (user) => request(`/oauth/${user}/count
  * @param {String} name 用户名
  */
 export const getUser = name => request(`/users/${name}`)
+
+/**
+ * 获取某个仓库
+ * @param {String} path 仓库路径
+ */
+export const getRepository = path => request(`/repos${path}`)
+
+/**
+ * 
+ * @param {String} path 
+ */
+export const getRepositoryReadme = path => request(`/repos${path}/readme`)

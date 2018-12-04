@@ -1,5 +1,6 @@
 <template>
   <view class="code__wrapper">
+    <loading :show.sync="showLoading" />
     <repeat for="{{ sourceCode }}" key="index" index="index" item="item">
       <view class="code__line">
         <text class="index">{{ index + 1 }}</text><text>{{ item }}</text>
@@ -11,14 +12,20 @@
 <script>
 import wepy from 'wepy'
 import { request, Base64 } from '@/utils/helper'
+import Loading from '@/components/Loading'
 
 export default class CodeDetail extends wepy.page {
     config = {
         navigationBarTitleText: 'source code'
     }
 
+    components = {
+        loading: Loading
+    }
+
     data = {
-        sourceCode: []
+        sourceCode: [],
+        showLoading: true
     }
 
     async onLoad(options) {
@@ -38,6 +45,7 @@ export default class CodeDetail extends wepy.page {
 
                 if (content) {
                     this.sourceCode = Base64.decode(content).split('\n')
+                    this.showLoading = false
                     this.$apply()
                 }
             }
@@ -52,6 +60,23 @@ export default class CodeDetail extends wepy.page {
   .code__wrapper {
     overflow: scroll;
     font-size: 30rpx;
+    width: 750rpx;
+    height: 100vh;
+
+    &::-webkit-scrollbar {
+        width: 8rpx;
+        height: 8rpx;
+    }
+
+    &::-webkit-scrollbar-track {
+        border-radius: 3rpx;
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 3rpx;
+        background-color: rgba(41, 61, 238, .5);
+    }
 
     .code__line {
       white-space: nowrap;

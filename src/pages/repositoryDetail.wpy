@@ -54,8 +54,8 @@ export default class Repository extends wepy.page {
         md: '',
         info: {},
         tags: [],
-        showDesc: true,
-        repoDescription: 'woshicontent',
+        showDesc: false,
+        repoDescription: '',
         repoName: ''
     }
 
@@ -71,10 +71,10 @@ export default class Repository extends wepy.page {
             repo_path,
             avatar
         } = options
-        
+
         this.avatarUrl = avatar
         this.repoName = repo_path.slice(1)
-        this.fetchRepoInfo(repo_path) 
+        this.fetchRepoInfo(repo_path)
         this.fetchTags(repo_path)
 
         const result = await services.getRepositoryReadme(repo_path)
@@ -106,11 +106,11 @@ export default class Repository extends wepy.page {
                 language,
                 stargazers_count,
                 subscribers_count,
-                description,
                 size: Math.ceil(size / 1024),
                 updateTime: formatMsgTime(updated_at),
                 bgColor: githubColor[language].color
             }
+            this.repoDescription = description
             this.$apply()
         }
     }

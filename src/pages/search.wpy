@@ -201,6 +201,12 @@ export default class Search extends wepy.page {
 
       .shadow__box {
         box-shadow: 0 0rpx 15rpx 1rpx #bbb;
+
+        ::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            color: transparent;
+        }
       }
 
       .tabs {

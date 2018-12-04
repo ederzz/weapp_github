@@ -51,21 +51,24 @@ export default class Feeds extends wepy.page {
 
     methods = {
         async loadMore() {
+            if (this.loading) {
+                return null
+            }
+            this.loading = true
             await this.fetchFeeds()
+            this.loading = false
         }
     }
 
     async onLoad() {
         this.loginUser = wx.getStorageSync('userInfo').login
-        if (this.loading) {
-            return null
-        }
-        this.loading = true
         await this.fetchFeeds()
-        this.loading = false
     }
 
     async fetchFeeds() {
+        if (!this.loginUser) {
+            return null
+        }
         const {
             statusCode,
             data = []

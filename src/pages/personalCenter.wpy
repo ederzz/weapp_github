@@ -1,7 +1,9 @@
 <template>
 <view class="contributions-wrapper">
     <view class="header">
-        <image src="{{ userInfo.avatar_url }}" />
+        <custom_image 
+            image-class="head" 
+            img-src="{{ userInfo.avatar_url }}"></custom_image>
         <view class="right">
             <view class="name">
                 {{ userInfo.name }}
@@ -43,13 +45,14 @@ export default class PersonalCenter extends wepy.page {
     config = {
         navigationBarTitleText: '个人中心',
         usingComponents: {
-            contributions_heatmap: '../components/nativeComponents/githubContributionsMap/index'
+            contributions_heatmap: '../components/nativeComponents/githubContributionsMap/index',
+            custom_image: '../components/nativeComponents/LazyLoadImage/index'
         }
     }
 
     data = {
-      contributions: {},
-      userInfo: {}
+        contributions: {},
+        userInfo: {}
     }
 
     async onLoad() {
@@ -83,7 +86,7 @@ export default class PersonalCenter extends wepy.page {
             this.contributions = data[new Date().getFullYear()]
             this.$apply()
         }
-   }
+    }
 }
 </script>
 
@@ -93,7 +96,7 @@ export default class PersonalCenter extends wepy.page {
             display: flex;
             padding: 0 40rpx;
 
-            >image {
+            .head {
                 width: 200rpx;
                 height: 200rpx;
                 border-radius: 8rpx;

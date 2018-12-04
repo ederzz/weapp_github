@@ -51,6 +51,12 @@ export default class Login extends wepy.page {
                 const { data } = result
                 wx.setStorageSync('userInfo', data)
                 wepy.switchTab({ url: './feeds' })
+            } else {
+                wx.setStorageSync('base64Account', '')
+                wx.showToast({
+                    title: 'Incorrect username or password',
+                    icon: 'none'
+                })
             }
         },
         onFocus(name) {

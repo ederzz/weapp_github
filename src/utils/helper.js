@@ -222,3 +222,19 @@ export const parseDateStr = str => {
  * 随机HSL颜色值
  */
 export const getRandomHSL = () => `hsl(${360 * Math.random()}, ${25 + 65 * Math.random()}%, ${65 + 25 * Math.random()}%)`
+
+/**
+ * 函数节流
+ * @param {Function} f 包装函数
+ * @param {Number} wait 等待毫秒数
+ */
+export const throttle = (f, wait) => {
+    let start = Date.now() - wait
+    return function (...args) {
+        const that = this
+        if (Date.now() - start >= wait) {
+            f.apply(that, args)
+            start = Date.now()
+        }
+    }
+}

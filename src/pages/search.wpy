@@ -47,6 +47,7 @@ import RepositoryList from '@/components/search/repositoryList'
 import UserList from '@/components/search/userList'
 import IssueList from '@/components/search/issueList'
 import CodeList from '@/components/search/codeList'
+import { throttle } from '@/utils/helper'
 
 export default class Search extends wepy.page {
     config = {
@@ -116,7 +117,7 @@ export default class Search extends wepy.page {
                     }
                 }
             } = e
-            this.$broadcast('search', search)
+            this.throttleSearch(search)
         }
     }
 
@@ -124,6 +125,12 @@ export default class Search extends wepy.page {
         updateTotal(total, index) {
             this.total[index] = total
         }
+    }
+
+    onLoad() {
+        this.throttleSearch = throttle((search) => {
+            this.$broadcast('search', search)
+        }, 1000)
     }
 }
 </script>

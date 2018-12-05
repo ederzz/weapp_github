@@ -1,6 +1,6 @@
 <template>
     <view>
-        <view @tap="showDescPanel" class="header">
+        <view class="header">
             <image @tap="showDescPanel" class="desc-btn" src="../images/info.png" />
             <view class="info">
                 <image src="{{ avatarUrl }}" />

@@ -51,8 +51,13 @@ export default class PersonalCenter extends wepy.page {
     }
 
     data = {
-        contributions: {},
         userInfo: {}
+    }
+
+    computed = {
+        contributions() {
+            return wx.getStorageSync('loginUserContributions')
+        }
     }
 
     async onLoad() {
@@ -78,12 +83,15 @@ export default class PersonalCenter extends wepy.page {
             created_at,
             email
         }
+        if (wx.getStorageSync('loginUserContributions')) {
+            return null
+        }
         const {
             statusCode,
             data
         } = await services.getLoginUserContributions(login)
         if (statusCode === 200) {
-            this.contributions = data[new Date().getFullYear()]
+            wx.setStorageSync('loginUserContributions', data[new Date().getFullYear()])
             this.$apply()
         }
     }

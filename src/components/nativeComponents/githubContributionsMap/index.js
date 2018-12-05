@@ -22,12 +22,6 @@ function getOptions(data) {
     })
 
     const options = {
-        // grid: {
-        //     left: 0,
-        //     right: 0,
-        //     top: '10%',
-        //     bottom: 0
-        // },
         calendar: {
             top: 20,
             left: 20,
@@ -120,7 +114,7 @@ Component({
             canvas.setChart(chart)
           
             that.chart = chart
-            const options = getOptions()
+            const options = getOptions(contributions)
             chart.setOption(options)
 
             return chart

@@ -73,7 +73,7 @@ export const getUserTimeline = (no, user) => request(`/users/${user}/received_ev
  * get login user github contributions
  */
 export const getLoginUserContributions = (user) => request(`/oauth/${user}/count`, {
-  baseUrl: 'http://101.132.180.254:3002'
+  baseUrl: 'http://www.shenyiling.cn:3002'
 })
 
 /**

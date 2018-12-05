@@ -1,12 +1,27 @@
 <template>
-  <view class="code__wrapper">
+  <scroll-view 
+    scroll-top="{{scrollViewScrollTop}}"
+    @scroll="handleScroll"
+    scroll-y 
+    scroll-x  
+    class="code__wrapper">
     <loading :show.sync="showLoading" />
-    <repeat for="{{ sourceCode }}" key="index" index="index" item="item">
-      <view class="code__line">
-        <text class="index">{{ index + 1 }}</text><text>{{ item }}</text>
-      </view>
-    </repeat>
-  </view>
+    <view class="measure-box">
+        <repeat for="{{ sourceCode }}" key="index" index="index" item="item">
+        <view class="code__line">
+            <text class="index">{{ index + 1 }}</text><text>{{ item }}</text>
+        </view>
+        </repeat>
+    </view>
+    <view class="slider-wrapper">
+        <slider 
+            activeColor="rgb(101, 113, 230)"
+            backgroundColor="#fff"
+            block-size="14"
+            @change="sliderChange" 
+            value="{{sliderVal}}" />
+    </view>
+  </scroll-view>
 </template>
 
 <script>
@@ -25,7 +40,38 @@ export default class CodeDetail extends wepy.page {
 
     data = {
         sourceCode: [],
-        showLoading: true
+        showLoading: true,
+        windowH: 0,
+        readPercent: 0,
+        scrollH: 0
+    }
+
+    computed = {
+        sliderVal() {
+            return this.readPercent * 100
+        },
+        scrollViewScrollTop() {
+            return (this.scrollH - this.windowH) * this.readPercent
+        }
+    }
+
+    methods = {
+        sliderChange({
+            detail: {
+                value
+            }
+        }) {
+            this.readPercent = value / 100
+        },
+        handleScroll({
+            detail: {
+                scrollTop,
+                scrollHeight
+            }
+        }) {
+            this.readPercent = (scrollTop / (scrollHeight - this.windowH)).toFixed(2)
+            this.$apply()
+        }
     }
 
     async onLoad(options) {
@@ -33,6 +79,7 @@ export default class CodeDetail extends wepy.page {
             url = ''
         } = options
         const urlReg = /https:\/\/api.github.com(.*)/
+        this.windowH = this.$parent.globalData.systemInfo.windowHeight
 
         if (url && urlReg.exec(url)[1]) {
             const result = await request(urlReg.exec(url)[1])
@@ -47,6 +94,15 @@ export default class CodeDetail extends wepy.page {
                     this.sourceCode = Base64.decode(content).split('\n')
                     this.showLoading = false
                     this.$apply()
+                    this.$nextTick(() => {
+                        const query = wx.createSelectorQuery()
+                        query.select('.measure-box').boundingClientRect()
+                        query.exec(([{
+                            height
+                        }]) => {
+                            this.scrollH = height
+                        })
+                    })
                 }
             }
         }
@@ -63,17 +119,17 @@ export default class CodeDetail extends wepy.page {
     width: 750rpx;
     height: 100vh;
 
-    &::-webkit-scrollbar {
+    ::-webkit-scrollbar {
         width: 8rpx;
         height: 8rpx;
     }
 
-    &::-webkit-scrollbar-track {
+    ::-webkit-scrollbar-track {
         border-radius: 3rpx;
         background-color: transparent;
     }
 
-    &::-webkit-scrollbar-thumb {
+    ::-webkit-scrollbar-thumb {
         border-radius: 3rpx;
         background-color: rgba(41, 61, 238, .5);
     }
@@ -90,6 +146,17 @@ export default class CodeDetail extends wepy.page {
         display: inline-block;
         width: 102rpx;
       }
+    }
+
+    .slider-wrapper {
+        position: fixed;
+        bottom: 60rpx;
+        left: 0;
+        right: 0;
+        background: rgb(229, 233, 235);
+        width: 660rpx;
+        margin: 0 auto;
+        border-radius: 8rpx;
     }
   }
 </style>

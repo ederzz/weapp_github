@@ -120,9 +120,18 @@ export default class Feeds extends wepy.page {
         overflow: scroll;
 
         ::-webkit-scrollbar {
-            width: 0;
-            height: 0;
-            color: transparent;
+            width: 8rpx;
+            height: 8rpx;
+        }
+
+        ::-webkit-scrollbar-track {
+            border-radius: 3rpx;
+            background-color: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 3rpx;
+            background-color: rgba(41, 61, 238, .5);
         }
 
         .loading {
